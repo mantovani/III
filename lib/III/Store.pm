@@ -18,7 +18,7 @@ has 'infs_attrs' => (
     is      => 'ro',
     isa     => 'ArrayRef',
     default => sub {
-        [qw/category title sub_title source source_link author text/];
+        [qw/category title source source_link author text/];
     }
 );
 
@@ -47,7 +47,8 @@ III::Store is the class to store the date.
 =cut
 
 before 'store' => sub {
-    my ( $self, $infs ) = @_;
+    my ( $self, $infs_traits ) = @_;
+    my $infs = $self->_trait_infs($infs_traits);
     foreach my $check ( @{ $self->infs_attrs } ) {
         die qq{"$check" undefined in store} if !defined $infs->{$check};
     }
@@ -71,6 +72,14 @@ sub store {
     else {
         print "Já existe\n";
     }
+}
+
+sub _trait_infs {
+    my ( $self, $infs ) = @_;
+    if ( !$infs->{author} ) {
+        $infs->{author} = 'Desconhecido';
+    }
+    return $infs;
 }
 
 return 1;

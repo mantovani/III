@@ -55,9 +55,6 @@ sub parser_news {
     if ( $tree->as_HTML =~ m{<dt>(.+?)</dt>} ) {
         $infs->{author} = $1;
     }
-    if ( !$infs->{author} ) {
-        $infs->{author} = 'Desconhecido';
-    }
 
     $infs->{category} = 'Tecnologia';
     $infs->{sub_title} =
