@@ -6,7 +6,7 @@ use Moose;
 
 III - Internet Internet Internet
 
-Sim o nome é horrível.
+noticiasglobal.com
 
 =cut
 
