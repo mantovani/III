@@ -25,9 +25,9 @@ sub init {
 }
 
 sub all_news {
-    my $self = shift;
-    $self->spider->mechanize->get( $self->link );
-    $self->itens( $self->spider->mechanize->content );
+    my $self    = shift;
+    my $content = $self->spider->agent->get( $self->link );
+    $self->itens($content);
 }
 
 sub itens {
@@ -36,9 +36,9 @@ sub itens {
     my @itens = $tree->findnodes('//div[@id="newslist"]//a');
     foreach my $item (@itens) {
 
-        $self->spider->mechanize->get( $item->attr('href') );
+        my $content = $self->spider->agent->get( $item->attr('href') );
         $self->parser_news(
-            $self->spider->mechanize->content,
+            $content,
             {
                 title       => $item->as_text,
                 source_link => $item->attr('href'),
@@ -52,7 +52,7 @@ sub parser_news {
     my ( $self, $news, $infs ) = @_;
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
 
-    $infs->{author} = $tree->findvalue('//div[@id="articleBy"]');
+    $infs->{author}   = $tree->findvalue('//div[@id="articleBy"]');
     $infs->{category} = 'Ciência';
     $infs->{source}   = $self->source;
     $infs->{text}     = $tree->findvalue('//div[@id="articleNew"]/p');

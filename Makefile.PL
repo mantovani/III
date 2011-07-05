@@ -21,6 +21,7 @@ requires 'MongoDB';
 requires 'Redis';
 requires 'Digest::MD5';
 requires 'WWW::Mechanize';
+requires 'TryCatch';
 
 requires
   'Config::General';  # This should reflect the config file format you've chosen

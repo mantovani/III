@@ -65,12 +65,17 @@ sub store {
 
     # if the news don't exists save
     if ( $self->iiiglue->check( $infs->{source_link} ) ) {
-        $infs->{timestamp} = localtime;
-        print "Salvou\n";
+        $infs->{timestamp} = "@{[localtime]}";
+        $self->index_category( $infs->{category} );
         $self->db->iii->news->insert($infs);
     }
-    else {
-        print "Já existe\n";
+}
+
+sub index_category {
+    my ( $self, $category ) = @_;
+    my $check = $self->db->iii->category->find_one( { category => $category } );
+    unless ($check) {
+        $self->db->iii->category->insert( { category => $category } );
     }
 }
 

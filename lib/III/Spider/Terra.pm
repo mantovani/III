@@ -26,9 +26,9 @@ sub init {
 }
 
 sub all_news {
-    my $self = shift;
-    $self->spider->mechanize->get( $self->link );
-    my $xml = XMLin( $self->spider->mechanize->content );
+    my $self    = shift;
+    my $content = $self->spider->agent->get( $self->link );
+    my $xml     = XMLin($content);
     $self->itens($xml);
 }
 
@@ -37,9 +37,9 @@ sub itens {
     my @itens = @{ $xml->{channel}->{item} };
     foreach my $item (@itens) {
 
-        $self->spider->mechanize->get( $item->{link} );
+        my $content = $self->spider->agent->get( $item->{link} );
         $self->parser_news(
-            $self->spider->mechanize->content,
+            $content,
             {
                 title       => $item->{title},
                 source_link => $item->{link}
