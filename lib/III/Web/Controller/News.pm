@@ -22,10 +22,11 @@ Catalyst Controller.
 sub base : Chained('/base') : PathPart('news') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{last_news} = sub {
-        return $c->model('MongoDB')->c('news')->query( {}, { limit => 10 } );
+        return $c->model('MongoDB')->c('news')
+          ->query( {}, { limit => 10, sort_by => { timestamp => -1 } } );
     };
 
-	# - Text tratament
+    # - Text tratament
     $c->stash->{few_words} = sub {
         my $text = shift;
         if ( length $text < 500 ) {
@@ -37,7 +38,7 @@ sub base : Chained('/base') : PathPart('news') : CaptureArgs(0) {
         }
     };
 
-	# - Text tratament
+    # - Text tratament
     $c->stash->{better_view} = sub {
         my $text = shift;
 
@@ -92,7 +93,7 @@ sub category : Chained('base') : PathPart('category') : Args(1) {
         {
             limit   => $limit,
             skip    => $skip,
-            sort_by => { timestamp => 1 },
+            sort_by => { timestamp => -1 },
         }
     );
 }
