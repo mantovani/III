@@ -3,11 +3,9 @@
 </div>
 
 [% IF news.sub_title %]
-
 <div id="sub_title">
 	<p><i>[% news.sub_title %]</i></p>
 </div>
-
 [% END %]
 
 <div id="text">
@@ -19,9 +17,8 @@
 </div>
 
 [% IF news.author %]
-
 <div id="author">
 	<p>Autor: [% news.author%]</p>
 </div>
-
 [% END %]
+[% INCLUDE social.tt %]
