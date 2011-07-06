@@ -18,7 +18,7 @@ has 'infs_attrs' => (
     is      => 'ro',
     isa     => 'ArrayRef',
     default => sub {
-        [qw/category title source source_link author text/];
+        [qw/category title source source_link text/];
     }
 );
 
@@ -50,7 +50,8 @@ before 'store' => sub {
     my ( $self, $infs_traits ) = @_;
     my $infs = $self->_trait_infs($infs_traits);
     foreach my $check ( @{ $self->infs_attrs } ) {
-        die qq{"$check" undefined in store} unless defined $infs->{$check};
+        print STDERR qq{"$check" undefined in store}
+          if $infs->{$check} !~ /\w/;
         return;
     }
 };
