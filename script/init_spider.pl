@@ -4,17 +4,20 @@ use strict;
 use warnings;
 
 use III::Dispatcher;
+use Getopt::Long;
 
 my $dp = III::Dispatcher->new;
 
-$dp->init_all;
-
-__END__
 chomp( my $spider = $ARGV[0] );
-if ( $spiders->{$spider} ) { $dp->init($spider) }
-
+if ( $spider =~ /todos/ ) {
+    $dp->init_all;
+}
 else {
-    print qq{"$spider" não encontrado.\n};
+	my $spiders = spiders();
+    if ( $spiders->{$spider} ) { $dp->init($spider) }
+    else {
+        print qq{"$spider" não encontrado.\n};
+    }
 }
 
 =head2 spiders
