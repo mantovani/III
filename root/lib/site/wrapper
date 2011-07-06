@@ -15,7 +15,6 @@
 	[% ELSE %]
     	<title>Not&iacute;cias Global</title> 
 	[% END %]
-<script type="text/javascript">var switchTo5x=true;</script><script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script><script type="text/javascript">stLight.options({publisher:'7bd08c96-2f01-4ced-94aa-18ab1cc6aa89'});</script>
 	</head> 
 	<body> 
     <div align="center">
