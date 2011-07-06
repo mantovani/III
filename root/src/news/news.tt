@@ -1,7 +1,7 @@
 <div id="title">
 	<h2>[% news.title %]</h2>
 </div>
-[% INCLUDE social.tt %]
+[% INCLUDE social.tt twitter_text = "Not&iacute;cias Global - $news.title " %]
 
 [% IF news.sub_title %]
 <div id="sub_title">

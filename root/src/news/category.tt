@@ -1,5 +1,5 @@
 <h2>&Uacute;ltimas Not&iacute;cias - [% category %]</h2>
-[% INCLUDE social.tt %]
+[% INCLUDE social.tt twitter_text = "Not&iacute;cias Global - $category " %]
 [% FOREACH my_news IN category_news.all %]
 
     <a href="[% c.uri_for(c.controller("News").action_for("news"),id(my_news)) %]">
