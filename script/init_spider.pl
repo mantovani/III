@@ -7,8 +7,9 @@ use III::Dispatcher;
 
 my $dp = III::Dispatcher->new;
 
-my $spiders = spiders();
+$dp->init_all;
 
+__END__
 chomp( my $spider = $ARGV[0] );
 if ( $spiders->{$spider} ) { $dp->init($spider) }
 
