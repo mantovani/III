@@ -35,7 +35,6 @@ sub itens {
     my $tree  = HTML::TreeBuilder::XPath->new_from_content($html);
     my @itens = $tree->findnodes('//div[@id="newslist"]//a');
     foreach my $item (@itens) {
-
         my $content = $self->spider->agent->get( $item->attr('href') );
         $self->parser_news(
             $content,
@@ -56,6 +55,8 @@ sub parser_news {
     $infs->{category} = 'Ciência';
     $infs->{source}   = $self->source;
     $infs->{text}     = $tree->findvalue('//div[@id="articleNew"]/p');
+
+    return if length( $infs->{text} ) < 20;
 
     if ( $tree->exists('//p[@class="wideVideoPlayer"]') ) {
         my $video = $tree->findnodes('//p[@class="wideVideoPlayer"]')->[0];
