@@ -18,7 +18,12 @@ sub get {
     while ( $try > 0 ) {
         try {
             $self->mechanize->get($url);
-            $try = -1;
+            if ( $self->mechanize->success ) {
+                $try = -1;
+            }
+            else {
+                $try--;
+            }
         }
         catch {
             $try--;
