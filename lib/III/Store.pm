@@ -67,7 +67,7 @@ sub store {
 
     # if the news don't exists save
     if ( $self->iiiglue->check( $infs->{source_link} ) ) {
-        $infs->{timestamp} = join( '', localtime );
+        $infs->{timestamp} = time;
         $self->index_category( $infs->{category} );
         $self->db->iii->news->insert($infs);
     }
