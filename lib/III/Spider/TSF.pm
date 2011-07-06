@@ -1,4 +1,4 @@
-package III::Spider::Folha;
+package III::Spider::TSF;
 
 use III::Spider;
 use Moose::Role;
@@ -8,7 +8,7 @@ use Data::Dumper;
 has 'link' => (
     is      => 'ro',
     isa     => 'Str',
-    default => 'http://www1.folha.uol.com.br/ciencia/'
+    default => 'http://www.tsf.pt/PaginaInicial/Economia/'
 );
 
 has 'spider' => (
@@ -17,7 +17,7 @@ has 'spider' => (
     default => sub { III::Spider->new }
 );
 
-has 'source' => ( is => 'ro', isa => 'Str', default => 'Folha' );
+has 'source' => ( is => 'ro', isa => 'Str', default => 'TSF' );
 
 sub init {
     my $self = shift;
@@ -33,15 +33,14 @@ sub all_news {
 sub itens {
     my ( $self, $html ) = @_;
     my $tree  = HTML::TreeBuilder::XPath->new_from_content($html);
-    my @itens = $tree->findnodes('//div[@id="newslist"]//a');
+    my @itens = $tree->findnodes('//div[@class="Destaque"]//h1/a');
     foreach my $item (@itens) {
-
         my $content = $self->spider->agent->get( $item->attr('href') );
         $self->parser_news(
             $content,
             {
                 title       => $item->as_text,
-                source_link => $item->attr('href'),
+                source_link => 'http://www.tsf.pt' . $item->attr('href'),
             }
         );
     }
@@ -52,22 +51,22 @@ sub parser_news {
     my ( $self, $news, $infs ) = @_;
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
 
-    $infs->{author}   = $tree->findvalue('//div[@id="articleBy"]');
-    $infs->{category} = 'Ciência';
+    $infs->{author}   = 'Desconhecido';
+    $infs->{category} = 'Economia';
     $infs->{source}   = $self->source;
-    $infs->{text}     = $tree->findvalue('//div[@id="articleNew"]/p');
 
-    if ( $tree->exists('//p[@class="wideVideoPlayer"]') ) {
-        my $video = $tree->findnodes('//p[@class="wideVideoPlayer"]')->[0];
-        $infs->{text} .= $video->as_HTML;
+    if ( $tree->findvalue('//div[@id="Article"]') =~ /\w{10,}/ ) {
+        $infs->{text} = $tree->findvalue('//div[@id="Article"]');
     }
-
+    else {
+        $infs->{text} = $tree->findvalue('//span[@id="SummaryContent"]');
+    }
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];
     if ($keywords) {
         $infs->{keywords} = [ split /,/, $keywords->attr('content') ];
     }
     $self->spider->store($infs);
-    $tree->delete;
+	$tree->delete;
 }
 
 42;

@@ -50,7 +50,8 @@ before 'store' => sub {
     my ( $self, $infs_traits ) = @_;
     my $infs = $self->_trait_infs($infs_traits);
     foreach my $check ( @{ $self->infs_attrs } ) {
-        die qq{"$check" undefined in store} if !defined $infs->{$check};
+        die qq{"$check" undefined in store} unless defined $infs->{$check};
+        return;
     }
 };
 
