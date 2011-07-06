@@ -9,8 +9,14 @@ use Encode;
 
 has 'link' => (
     is      => 'ro',
-    isa     => 'Str',
-    default => 'http://rss.terra.com.br/0,,EI12879,00.xml'
+    isa     => 'HashRef',
+    default => sub {
+        {
+            Tecnologia => 'http://rss.terra.com.br/0,,EI12879,00.xml',
+            Esportes   => 'http://rss.terra.com.br/0,,EI1137,00.xml',
+            Games      => 'http://rss.terra.com.br/0,,EI1702,00.xml',
+        };
+    },
 );
 
 has 'spider' => (
@@ -27,14 +33,16 @@ sub init {
 }
 
 sub all_news {
-    my $self    = shift;
-    my $content = $self->spider->agent->get( $self->link );
-    my $xml     = XMLin($content);
-    $self->itens($xml);
+    my $self = shift;
+    foreach my $go_link ( keys %{ $self->link } ) {
+        my $content = $self->spider->agent->get( $self->link->{$go_link} );
+        my $xml     = XMLin($content);
+        $self->itens( $xml, { categoria => $go_link } );
+    }
 }
 
 sub itens {
-    my ( $self, $xml ) = @_;
+    my ( $self, $xml, $categoria ) = @_;
     my @itens = @{ $xml->{channel}->{item} };
     foreach my $item (@itens) {
 
@@ -43,7 +51,8 @@ sub itens {
             $content,
             {
                 title       => decode( 'utf8', $item->{title} ),
-                source_link => $item->{link}
+                source_link => $item->{link},
+                categoria   => $categoria->{categoria},
             }
         );
     }
@@ -57,7 +66,7 @@ sub parser_news {
         $infs->{author} = $1;
     }
 
-    $infs->{category} = 'Tecnologia';
+    $infs->{category} = $infs->{categoria};
     $infs->{sub_title} =
       $tree->findvalue('//div[@class="img-article fontsize p1 printing"]/p');
     $infs->{source} = $self->source;
@@ -67,6 +76,7 @@ sub parser_news {
     if ($keywords) {
         $infs->{keywords} = [ split /,/, $keywords->attr('content') ];
     }
+
     $self->spider->store($infs);
     $tree->delete;
 }
