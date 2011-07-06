@@ -1,0 +1,27 @@
+<div id="title">
+	<h2>[% news.title %]</h2>
+</div>
+
+[% IF news.sub_title %]
+
+<div id="sub_title">
+	<p><i>[% news.sub_title %]</i></p>
+</div>
+
+[% END %]
+
+<div id="text">
+	<p>[% better_view(news.text) %]</p>
+</div>
+
+<div id="source">
+	<p>Fonte: [% news.source %] - [% news.source_link %]</p>
+</div>
+
+[% IF news.author %]
+
+<div id="author">
+	<p>Autor: [% news.author%]</p>
+</div>
+
+[% END %]

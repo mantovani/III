@@ -15,6 +15,8 @@ requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Action::RenderView';
 requires 'Moose';
 requires 'namespace::autoclean';
+requires 'Catalyst::Plugin::Unicode';
+requires 'Text::Iconv';
 
 # Backend
 requires 'MongoDB';
@@ -22,6 +24,7 @@ requires 'Redis';
 requires 'Digest::MD5';
 requires 'WWW::Mechanize';
 requires 'TryCatch';
+requires 'Catalyst::Model::MongoDB';
 
 requires
   'Config::General';  # This should reflect the config file format you've chosen

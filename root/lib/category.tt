@@ -1,0 +1,8 @@
+<div id="menu">
+<a href="[% c.uri_for(c.controller("news").action_for("index")) %]">Principal</a> - 
+[% FOREACH my_category IN menu.all %]
+	<a href="[% c.uri_for(c.controller("news").action_for("category"),my_category.category) %]">[% my_category.category %]</a> -
+[% END %]
+Sobre
+</div>
+<br />

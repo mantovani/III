@@ -20,6 +20,7 @@ use Catalyst qw/
     -Debug
     ConfigLoader
     Static::Simple
+	Unicode
 /;
 
 extends 'Catalyst';

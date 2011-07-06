@@ -5,6 +5,7 @@ use Moose::Role;
 use XML::Simple;
 use HTML::TreeBuilder::XPath;
 use Data::Dumper;
+use Encode;
 
 has 'link' => (
     is      => 'ro',
@@ -41,7 +42,7 @@ sub itens {
         $self->parser_news(
             $content,
             {
-                title       => $item->{title},
+                title       => decode( 'utf8', $item->{title} ),
                 source_link => $item->{link}
             }
         );

@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" id="sixapart-standard"> 
+	<head> 
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+		<link rel="stylesheet" href="/static/css.css" type="text/css" media="print"  /> 
+	[% IF template.meta %]
+	    <meta name="keywords" content="template.meta" />
+	[% ELSE %]
+	    <meta name="keywords" content="jornal, livre, tecnologia, ciencia, negocios" />
+	[% END %]
+
+	[% IF template.title %]
+    	<title>Not&iacute;cias Global - template.title</title> 
+	[% ELSE %]
+    	<title>Not&iacute;cias Global</title> 
+	[% END %]
+	</head> 
+	<body> 
+    <div align="center">
+	[% IF template.title %]
+		<h1>Not&iacute;cias Global - template.title</h1>
+	[% ELSE %]
+		<h1>Not&iacute;cias Global</h1>
+	[% END %]
+	</div>
+	[% INCLUDE category.tt %]
+
+	[% content %]
+
+	</body>
+</html>
