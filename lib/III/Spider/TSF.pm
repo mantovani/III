@@ -35,14 +35,16 @@ sub itens {
     my $tree  = HTML::TreeBuilder::XPath->new_from_content($html);
     my @itens = $tree->findnodes('//div[@class="Destaque"]//h1/a');
     foreach my $item (@itens) {
-        my $content = $self->spider->agent->get( $item->attr('href') );
-        $self->parser_news(
-            $content,
-            {
-                title       => $item->as_text,
-                source_link => 'http://www.tsf.pt' . $item->attr('href'),
-            }
-        );
+        if ( $item->attr('href') ) {
+            my $content = $self->spider->agent->get( $item->attr('href') );
+            $self->parser_news(
+                $content,
+                {
+                    title       => $item->as_text,
+                    source_link => 'http://www.tsf.pt' . $item->attr('href'),
+                }
+            );
+        }
     }
     $tree->delete;
 }
@@ -66,7 +68,7 @@ sub parser_news {
         $infs->{keywords} = [ split /,/, $keywords->attr('content') ];
     }
     $self->spider->store($infs);
-	$tree->delete;
+    $tree->delete;
 }
 
 42;
