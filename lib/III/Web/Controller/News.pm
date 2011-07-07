@@ -76,10 +76,12 @@ sub news : Chained('base') : PathPart('new') : Args(1) {
     $c->stash->{news} =
       $c->model('MongoDB')->c('news')
       ->find_one( { _id => MongoDB::OID->new( value => $id ) } );
+		$c->stash->{title} = $c->stash->{news}->{title};
 }
 
 sub category : Chained('base') : PathPart('category') : Args(1) {
     my ( $self, $c, $category ) = @_;
+	$c->stash->{title} = decode("utf8",$category);
     $c->stash->{category} = decode( "utf8", $category );
 
     my ( $limit, $skip ) = ( 15, 0 );

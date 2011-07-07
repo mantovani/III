@@ -4,25 +4,21 @@
 	<head> 
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 		<link rel="stylesheet" href="/static/css.css" type="text/css" media="print"  /> 
-	[% IF template.meta %]
-	    <meta name="keywords" content="template.meta" />
+	[% IF meta %]
+	    <meta name="keywords" content="[% meta %]" />
 	[% ELSE %]
 	    <meta name="keywords" content="jornal, livre, tecnologia, ciencia, negocios" />
 	[% END %]
 
-	[% IF template.title %]
-    	<title>Not&iacute;cias Global - template.title</title> 
+	[% IF title %]
+    	<title>[% title %]</title> 
 	[% ELSE %]
     	<title>Not&iacute;cias Global</title> 
 	[% END %]
 	</head> 
 	<body> 
     <div align="center">
-	[% IF template.title %]
-		<h1>Not&iacute;cias Global - template.title</h1>
-	[% ELSE %]
-		<h1>Not&iacute;cias Global</h1>
-	[% END %]
+	<h1>Not&iacute;cias Global</h1>
 	</div>
 	[% INCLUDE category.tt %]
 
