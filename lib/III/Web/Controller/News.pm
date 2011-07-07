@@ -23,7 +23,7 @@ sub base : Chained('/base') : PathPart('news') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{last_news} = sub {
         return $c->model('MongoDB')->c('news')
-          ->query( {}, { limit => 10, sort_by => { timestamp => -1 } } );
+          ->query( {}, { limit => 40, sort_by => { timestamp => -1 } } );
     };
 
     # - Text tratament
@@ -84,7 +84,7 @@ sub category : Chained('base') : PathPart('category') : Args(1) {
 	$c->stash->{title} = decode("utf8",$category);
     $c->stash->{category} = decode( "utf8", $category );
 
-    my ( $limit, $skip ) = ( 15, 0 );
+    my ( $limit, $skip ) = ( 40, 0 );
 
     # - skip untill next page :)
     if ( $c->req->params->{page} ) {
