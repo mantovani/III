@@ -1,7 +1,7 @@
 <div id="title">
 	<h2>[% news.title %]</h2>
 </div>
-[% INCLUDE social.tt twitter_text = "Not&iacute;cias Global - $news.title " %]
+[% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global - $news.title " %]
 
 [% IF news.sub_title %]
 <div id="sub_title">
@@ -22,4 +22,5 @@
 	<p>Autor: [% news.author%]</p>
 </div>
 [% END %]
-<div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script><fb:comments href="[% c.req.uri %]" num_posts="10" width="700"></fb:comments>
+
+[% INCLUDE social/comment.tt %]
