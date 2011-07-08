@@ -55,12 +55,23 @@ sub parser_news {
     $infs->{category} = 'Tecnologia';
     $infs->{source}   = $self->source;
 
-    $infs->{text} = $tree->findvalue('//div[@id="NewsSummary"]');
+    my @get_text = $tree->findnodes('//div[@id="NewsSummary"]')->[0]->content_list;
+    foreach my $text (@get_text) {
+        if ( !ref $text ) {
+            $infs->{text} .= $text;
+        }
+        else {
+            if ( $text->as_HTML !~ /div/ ) {
+                $infs->{text} .= $text->as_text;
+            }
+        }
+    }
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];
     if ($keywords) {
         $infs->{keywords} = [ split /,/, $keywords->attr('content') ];
     }
-    $self->spider->store($infs);
+    #$self->spider->store($infs);
+	print Dumper $infs;
     $tree->delete;
 }
 
