@@ -47,6 +47,12 @@ sub index : Chained('base') : Path : Args(0) {
         $c->uri_for( $c->controller('News')->action_for('index') ) );
 }
 
+sub robots : Chained('base') : PathPart('robots.txt') : Args(0) {
+    my ( $self, $c ) = @_;
+    $c->response->content_type('text/plain; charset=utf-8');
+    $c->response->body("User-agent: *\nAllow: /");
+}
+
 =head2 default
 
 Standard 404 error page
