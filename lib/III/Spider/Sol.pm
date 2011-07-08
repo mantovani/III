@@ -70,8 +70,7 @@ sub parser_news {
     if ($keywords) {
         $infs->{keywords} = [ split /,/, $keywords->attr('content') ];
     }
-    #$self->spider->store($infs);
-	print Dumper $infs;
+    $self->spider->store($infs);
     $tree->delete;
 }
 
