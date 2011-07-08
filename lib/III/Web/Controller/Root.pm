@@ -2,6 +2,8 @@ package III::Web::Controller::Root;
 use Moose;
 use namespace::autoclean;
 use Data::Dumper;
+use DateTime;
+use WWW::Sitemap::XML;
 
 BEGIN { extends 'Catalyst::Controller' }
 
@@ -39,6 +41,38 @@ sub base : Chained('/') : PathPart('') : CaptureArgs(0) {
     };
     $c->stash->{dump} = sub { Dumper @_ };
 
+}
+
+sub sitemap : Chained('base') : PathPart('sitemap.xml') : Args(0) {
+    my ( $self, $c ) = @_;
+    my $time = DateTime->now;
+    my $map  = WWW::Sitemap::XML->new;
+
+    $map->add(
+        WWW::Sitemap::XML::URL->new(
+            loc => $c->uri_for( $c->controller('News')->action_for('index'), ),
+            lastmod    => $time->ymd('-'),
+            changefreq => 'hourly',
+            priority   => 1.0,
+        )
+    );
+
+    foreach my $category ( $c->stash->{menu}->()->all ) {
+        $map->add(
+            WWW::Sitemap::XML::URL->new(
+                loc => $c->uri_for(
+                    $c->controller('News')->action_for('category'),
+                    $category->{category}
+                ),
+                lastmod    => $time->ymd('-'),
+                changefreq => 'hourly',
+                priority   => 1.0,
+            )
+        );
+    }
+    $c->response->content_type('text/xml; charset=utf-8');
+    my $xml = $map->as_xml;
+    $c->response->body( $xml->toString(1) );
 }
 
 sub index : Chained('base') : Path : Args(0) {
