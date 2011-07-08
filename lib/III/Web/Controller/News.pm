@@ -4,6 +4,7 @@ use namespace::autoclean;
 use Text::Iconv;
 use MongoDB::OID;
 use Encode;
+use DateTime;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -19,7 +20,7 @@ Catalyst Controller.
 
 =cut
 
-sub base : Chained('/base') : PathPart('news') : CaptureArgs(0) {
+sub base : Chained('/base') : PathPart('noticias') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{last_news} = sub {
         return $c->model('MongoDB')->c('news')
@@ -56,7 +57,9 @@ sub base : Chained('/base') : PathPart('news') : CaptureArgs(0) {
     };
 
     $c->stash->{no_accents} = sub {
-        return Text::Iconv->new( 'UTF-8', 'ASCII//TRANSLIT' )->convert(shift);
+        my $text = shift;
+        $text =~ s/[^\w\s]//g;
+        return Text::Iconv->new( 'UTF-8', 'ASCII//TRANSLIT' )->convert($text);
     };
 
     $c->stash->{url_friendly} = sub {
@@ -65,23 +68,43 @@ sub base : Chained('/base') : PathPart('news') : CaptureArgs(0) {
         return $title;
     };
 
+    $c->stash->{date} = sub {
+        my $time = shift;
+        my $dt = DateTime->from_epoch( epoch => $time );
+        return $dt;
+    };
+
 }
 
 sub index : Chained('base') : PathPart('') : Args(0) {
     my ( $self, $c ) = @_;
 }
 
-sub news : Chained('base') : PathPart('new') : Args(1) {
-    my ( $self, $c, $id ) = @_;
-    $c->stash->{news} =
-      $c->model('MongoDB')->c('news')
-      ->find_one( { _id => MongoDB::OID->new( value => $id ) } );
-		$c->stash->{title} = $c->stash->{news}->{title};
+sub news : Chained('base') : PathPart('') : Args(3) {
+    my ( $self, $c, $category, $ano, $url_amigavel ) = @_;
+    if ( $url_amigavel =~ /\-(.+)/ ) {
+        my $id = $1;
+        my $noticia =
+          $c->model('MongoDB')->c('news')
+          ->find_one( { _id => MongoDB::OID->new( value => $id ) } );
+        if ($noticia) {
+            $c->stash->{news}  = $noticia;
+            $c->stash->{title} = $c->stash->{news}->{title};
+        }
+        else {
+            $c->stash->{error} = 'Not&iacute;cia n&atilde;o encontrada :(';
+            $c->response->status(404);
+        }
+    }
+    else {
+        $c->stash->{error} = 'Not&iacute;cia n&atilde;o encontrada :(';
+        $c->response->status(404);
+    }
 }
 
-sub category : Chained('base') : PathPart('category') : Args(1) {
+sub category : Chained('base') : PathPart('') : Args(1) {
     my ( $self, $c, $category ) = @_;
-	$c->stash->{title} = decode("utf8",$category);
+    $c->stash->{title}    = decode( "utf8", $category );
     $c->stash->{category} = decode( "utf8", $category );
 
     my ( $limit, $skip ) = ( 40, 0 );

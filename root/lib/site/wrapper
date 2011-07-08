@@ -17,9 +17,6 @@
 	[% END %]
 	</head> 
 	<body> 
-    <div align="center">
-	<h1>Not&iacute;cias Global</h1>
-	</div>
 	[% INCLUDE category.tt %]
 
 	[% content %]

@@ -1,10 +1,14 @@
-<h2>[% category %]</h2>
+<div align="center">
+	<h1>[% category %]</h1>
+</div>
 [% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global - $category " %]
 [% FOREACH my_news IN category_news.all %]
 
-    <a href="[% c.uri_for(c.controller("News").action_for("news"),id(my_news)) %]">
-        <h3>[% my_news.title %]</h3></a>
-
-    <p>[% few_words(my_news.text) %]</p>
+<div itemscope itemtype="[% c.req.uri %]">
+    <a href="[% c.uri_for(c.controller("News").action_for("news"), no_accents(my_news.category), date(my_news.timestamp).year ,
+url_friendly(my_news.title) _ '-' _ id(my_news)) %]">
+        <h3 itemprop="nome">[% my_news.title %]</h3></a>
+    <p itemprop="resumo">[% few_words(my_news.text) %]</p>
+</div>
 
 [% END %]

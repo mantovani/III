@@ -1,26 +1,26 @@
-<div id="title">
-	<h2>[% news.title %]</h2>
-</div>
+[% IF error %]
+
+<p>[% error %]</p>
+<p>Nos desculpe pelo transforno</p>
+
+[% ELSE %]
+
 [% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global - $news.title " %]
+<div itemscope itemtype="[% c.uri_for(c.controller("News").action_for("category"),news.category) %]">
+	<h1 itemprop="nome">[% news.title %]</h1>
+	
+	[% IF news.sub_title %]
+		<h2 itemprop="subtitulo"><i>[% news.sub_title %]</i></h2>
+	[% END %]
+	<p itemprop="noticia">[% better_view(news.text) %]</p>
 
-[% IF news.sub_title %]
-<div id="sub_title">
-	<p><i>[% news.sub_title %]</i></p>
-</div>
-[% END %]
+	<p itemprop="fonte">Fonte: [% news.source %] - [% news.source_link %]</p>
 
-<div id="text">
-	<p>[% better_view(news.text) %]</p>
+	[% IF news.author %]
+		<p itemprop="autor">Autor: [% news.author%]</p>
+	[% END %]
 </div>
-
-<div id="source">
-	<p>Fonte: [% news.source %] - [% news.source_link %]</p>
-</div>
-
-[% IF news.author %]
-<div id="author">
-	<p>Autor: [% news.author%]</p>
-</div>
-[% END %]
 
 [% INCLUDE social/comment.tt %]
+
+[% END %]
