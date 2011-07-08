@@ -8,32 +8,32 @@
 
 <url>
   <loc>http://noticiasglobal.com/noticias</loc>
-  <changefreq>aways</changefreq>
+  <changefreq>always</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>http://noticiasglobal.com/noticias/Ci%C3%AAncia</loc>
-  <changefreq>aways</changefreq>
+  <changefreq>always</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>http://noticiasglobal.com/noticias/Economia</loc>
-  <changefreq>aways</changefreq>
+  <changefreq>always</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>http://noticiasglobal.com/noticias/Esportes</loc>
-  <changefreq>aways</changefreq>
+  <changefreq>always</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>http://noticiasglobal.com/noticias/Games</loc>
-  <changefreq>aways</changefreq>
+  <changefreq>always</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>http://noticiasglobal.com/noticias/Tecnologia</loc>
-  <changefreq>aways</changefreq>
+  <changefreq>always</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
