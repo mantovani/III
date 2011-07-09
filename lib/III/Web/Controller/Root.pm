@@ -40,7 +40,6 @@ sub base : Chained('/') : PathPart('') : CaptureArgs(0) {
         shift->{_id};
     };
     $c->stash->{dump} = sub { Dumper @_ };
-
 }
 
 sub sitemap : Chained('base') : PathPart('sitemap.xml') : Args(0) {

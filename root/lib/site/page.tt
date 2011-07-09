@@ -1,0 +1,24 @@
+<hr />
+[% IF pager.total_entries > 1 %]
+Exibindo [% pager.entries_on_this_page %] registro[% 's' UNLESS pager.entries_on_this_page == 1 %] de [% pager.total_entries %]<br/>
+[% END %]
+
+[% # mostrar link para primeira p&aacute;gina e para a p&aacute;gina anterior se a p&aacute;gina atual não for a primeira p&aacute;gina %]
+[% IF pager.previous_page %]
+    <a href="[% c.req.uri_with({page => pager.first_page}) %]">In&iacute;cio</a>
+    <center><a href="[% c.req.uri_with({page => pager.previous_page}) %]">P&aacute;gina Anterior ([% pager.previous_page %])</a>
+    [% UNLESS pager.next_page %] </center> [% END %]
+[% END %]
+
+[% # mostrar link para a última p&aacute;gina e para a pr&oacute;xima p&aacute;gina se a p&aacute;gina atual não for a última p&aacute;gina %]
+[% IF pager.next_page %]
+    [% UNLESS pager.previous_page %] <center> [% END %]
+		<a href="[% c.req.uri_with({page => pager.next_page}) %]">Pr&oacute;xima P&aacute;gina ([% pager.next_page %])</a></center>
+   		<a href="[% c.req.uri_with({page => pager.last_page}) %]">&Uacute;ltima P&aacute;gina</a>
+[% END %]
+
+[% IF pager.last_page > 1 %]
+<p>P&aacute;gina [% pager.current_page %] de [% pager.last_page %]</p>
+[% END %]
+
+

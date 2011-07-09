@@ -13,12 +13,15 @@
 		<h2 itemprop="subtitulo"><i>[% news.sub_title %]</i></h2>
 	[% END %]
 	<p itemprop="noticia">[% better_view(news.text) %]</p>
+    <p itemprop="data"><b>[% date(news.timestamp).ymd("/") %]</b></p>
 
 	<p itemprop="fonte">Fonte: [% news.source %] - [% news.source_link %]</p>
 
 	[% IF news.author %]
 		<p itemprop="autor">Autor: [% news.author%]</p>
 	[% END %]
+
+
 </div>
 
 [% INCLUDE social/comment.tt %]

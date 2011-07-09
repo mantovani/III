@@ -5,6 +5,7 @@ use Text::Iconv;
 use MongoDB::OID;
 use Encode;
 use DateTime;
+use Data::Page;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -107,20 +108,25 @@ sub category : Chained('base') : PathPart('') : Args(1) {
     $c->stash->{title}    = decode( "utf8", $category );
     $c->stash->{category} = decode( "utf8", $category );
 
-    my ( $limit, $skip ) = ( 40, 0 );
+    my ( $limit, $skip ) = ( 20, 0 );
 
     # - skip untill next page :)
     if ( $c->req->params->{page} ) {
-        $skip = $limit * $c->req->params->{page};
+        $skip = $limit * ( $c->req->params->{page} - 1 );
     }
-    $c->stash->{category_news} = $c->model('MongoDB')->c('news')->query(
-        { category => $category },
-        {
-            limit   => $limit,
-            skip    => $skip,
-            sort_by => { timestamp => -1 },
-        }
-    );
+
+    my $find =
+      $c->model('MongoDB')->c('news')->find( { category => $category } );
+
+    my $result = $find->limit($limit)->skip($skip)->sort( { timestamp => -1 } );
+
+    my $page = Data::Page->new();
+    $page->total_entries( $find->count );
+    $page->entries_per_page($limit);
+    $page->current_page( $c->req->params->{page} // 1 );
+
+    $c->stash->{pager} = $page;
+    $c->stash->{category_news} = $result;
 }
 
 =head1 AUTHOR
