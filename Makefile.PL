@@ -17,6 +17,7 @@ requires 'Moose';
 requires 'namespace::autoclean';
 requires 'Catalyst::Plugin::Unicode';
 requires 'Text::Iconv';
+requires 'DateTime';
 
 # Backend
 requires 'MongoDB';
