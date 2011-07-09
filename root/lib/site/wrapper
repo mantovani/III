@@ -5,7 +5,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="google-site-verification" content="Qa0Q7EPvsVtIIAQbkmLEhf7rmxGLidQTPodFHmmVugo" />
 		<meta name="msvalidate.01" content="17433E35FCE4255A20728E04B97C6900" />
- 
+		<META name="y_key" content="81415d56df8b84f2" />
+
 		<link rel="stylesheet" href="/static/css.css" type="text/css" media="print"  /> 
 	[% IF meta %]
 	    <meta name="keywords" content="[% meta %]" />
