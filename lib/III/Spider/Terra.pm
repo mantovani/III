@@ -60,6 +60,9 @@ sub itens {
 
 sub parser_news {
     my ( $self, $news, $infs ) = @_;
+
+	# - Retirando tag em
+    $news =~ s#<em>.+?</em>##ig;
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
 
     if ( $tree->as_HTML =~ m{<dt>(.+?)</dt>} ) {
