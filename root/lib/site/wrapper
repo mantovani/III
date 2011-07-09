@@ -8,7 +8,7 @@
 	[% IF meta %]
 	    <meta name="keywords" content="[% meta %]" />
 	[% ELSE %]
-	    <meta name="keywords" content="jornal, livre, tecnologia, ciencia, negocios" />
+	    <meta name="keywords" content="noticias globais, jornal, ciencia, economia, esportes, games, tecnologia" />
 	[% END %]
 
 	[% IF title %]
