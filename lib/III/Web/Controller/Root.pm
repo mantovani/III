@@ -52,7 +52,7 @@ sub sitemap : Chained('base') : PathPart('sitemap.xml') : Args(0) {
             loc => $c->uri_for( $c->controller('News')->action_for('index'), ),
             lastmod    => $time->ymd('-'),
             changefreq => 'hourly',
-            priority   => 1.0,
+            priority   => 0.1,
         )
     );
 
@@ -65,7 +65,7 @@ sub sitemap : Chained('base') : PathPart('sitemap.xml') : Args(0) {
                 ),
                 lastmod    => $time->ymd('-'),
                 changefreq => 'hourly',
-                priority   => 1.0,
+                priority   => 0.2,
             )
         );
     }
