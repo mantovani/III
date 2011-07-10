@@ -1,4 +1,9 @@
 .news {
-	width:80%;
+	width:75%;
 	float:left;
+}
+
+.menu {
+	float:right;
+	 width:20%;
 }

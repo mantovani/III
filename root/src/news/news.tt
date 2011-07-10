@@ -4,7 +4,6 @@
 <p>Nos desculpe pelo transforno</p>
 
 [% ELSE %]
-
 [% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global - $news.title " %]
 <div class="news" itemscope itemtype="[% c.uri_for(c.controller("News").action_for("category"),news.category) %]">
 	<h1 itemprop="nome">[% news.title %]</h1>
@@ -23,6 +22,11 @@
 
 
 </div>
+
+<div class="menu">
+	[% INCLUDE social/twitter_search.tt %]
+</div>
+
 
 [% INCLUDE social/comment.tt %]
 

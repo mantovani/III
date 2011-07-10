@@ -1,0 +1,34 @@
+<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'search',
+  search: '[% my_keywords %]',
+  interval: 6000,
+  title: '&Uacute;ltimos Coment&aacute;rios',
+  subject: 'Veja o que andam falando sobre o assunto',
+  width: 250,
+  height: 600,
+  theme: {
+    shell: {
+      background: '#8ec1da',
+      color: '#ffffff'
+    },
+    tweets: {
+      background: '#ffffff',
+      color: '#444444',
+      links: '#1985b5'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: true,
+    hashtags: true,
+    timestamp: true,
+    avatars: true,
+    toptweets: true,
+    behavior: 'all'
+  }
+}).render().start();
+</script>

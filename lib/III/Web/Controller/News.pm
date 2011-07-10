@@ -91,6 +91,8 @@ sub news : Chained('base') : PathPart('') : Args(3) {
         if ($noticia) {
             $c->stash->{news}  = $noticia;
             $c->stash->{title} = $c->stash->{news}->{title};
+            $c->stash->{my_keywords} =
+              $c->model('Keywords')->keywords( $c->stash->{news}->{title} );
         }
         else {
             $c->stash->{error} = 'Not&iacute;cia n&atilde;o encontrada :(';
@@ -125,7 +127,7 @@ sub category : Chained('base') : PathPart('') : Args(1) {
     $page->entries_per_page($limit);
     $page->current_page( $c->req->params->{page} // 1 );
 
-    $c->stash->{pager} = $page;
+    $c->stash->{pager}         = $page;
     $c->stash->{category_news} = $result;
 }
 
