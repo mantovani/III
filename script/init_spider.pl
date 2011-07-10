@@ -3,8 +3,10 @@
 use strict;
 use warnings;
 
+use lib 'lib/';
 use III::Dispatcher;
 use Getopt::Long;
+
 
 my $dp = III::Dispatcher->new;
 

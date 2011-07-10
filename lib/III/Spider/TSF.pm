@@ -57,6 +57,10 @@ sub parser_news {
     $infs->{category} = 'Economia';
     $infs->{source}   = $self->source;
 
+    if ( $tree->exists('//div[@id="NewsSummary"]') ) {
+        $infs->{sub_title} = $tree->findvalue('//div[@id="NewsSummary"]');
+    }
+
     if ( $tree->findvalue('//div[@id="Article"]') =~ /\w{10,}/ ) {
         $infs->{text} = $tree->findvalue('//div[@id="Article"]');
     }
