@@ -15,6 +15,9 @@ has 'link' => (
             Tecnologia => 'http://rss.terra.com.br/0,,EI12879,00.xml',
             Esportes   => 'http://rss.terra.com.br/0,,EI1137,00.xml',
             Games      => 'http://rss.terra.com.br/0,,EI1702,00.xml',
+            Cinema     => 'http://rss.terra.com.br/0,,EI1176,00.xml',
+            Economia => 'http://br.invertia.com/rss/economia/pt-br/feedrss.xml',
+            Mundo    => 'http://rss.terra.com.br/0,,EI294,00.xml',
         };
     },
 );
@@ -61,7 +64,7 @@ sub itens {
 sub parser_news {
     my ( $self, $news, $infs ) = @_;
 
-	# - Retirando tag em
+    # - Retirando tag em
     $news =~ s#<em>.+?</em>##ig;
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
 
