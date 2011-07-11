@@ -10,7 +10,7 @@ has 'preposicoes' => (
     isa     => 'ArrayRef',
     default => sub {
         [
-            qw/a antes até após com contra de desde em entre para per perante por sem sob sobre trás/
+            qw/a antes até após com contra de desde em entre para per perante por sem sob sobre trás que quem aquilo aquele/
         ];
     }
 );
@@ -20,7 +20,7 @@ sub keywords {
     my $keywords;
 
     $words =~ s/[\,\.]/ /g;
-	$words =~ s/["']|//g;
+    $words =~ s/["']|//g;
     my @all_words = split /\s/, $words;
   ADD: foreach my $word (@all_words) {
         $word = lc($word);
@@ -30,8 +30,9 @@ sub keywords {
             next ADD if $prepo =~ $word;
         }
 
-        $keywords .= " $word" if scalar keys %{$verb_forms} == 0;
+        $keywords .= "$word," if scalar keys %{$verb_forms} == 0;
     }
+    $keywords =~ s/,$//;
     return $keywords;
 }
 

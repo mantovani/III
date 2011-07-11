@@ -5,10 +5,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link href="/static/css.css" media="screen" rel="stylesheet" type="text/css" /> 
 
-	[% IF meta %]
-	    <meta name="keywords" content="[% meta %]" />
+	    <meta name="description" content="Not&iacute;cias Global a super fonte de conhecimento" />
+	[% IF my_keywords %]
+	    <meta name="keywords" content="[% my_keywords %]" />
 	[% ELSE %]
-	    <meta name="keywords" content="noticias globais, jornal, ciencia, economia, esportes, games, tecnologia" />
+	    <meta name="keywords" content="noticias globais,noticias global,jornal, ciencia, economia, esportes, games, tecnologia" />
 	[% END %]
 
 	[% IF title %]
