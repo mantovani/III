@@ -8,7 +8,7 @@ new TWTR.Widget({
   title: '&Uacute;ltimos Coment&aacute;rios',
   subject: 'Veja o que andam falando sobre o assunto',
   width: 250,
-  height: 600,
+  height: 500,
   theme: {
     shell: {
       background: '#8ec1da',

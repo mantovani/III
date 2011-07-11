@@ -4,11 +4,18 @@ use III::Spider;
 use Moose::Role;
 use HTML::TreeBuilder::XPath;
 use Data::Dumper;
+use utf8;
 
-has 'link' => (
+has 'links' => (
     is      => 'ro',
-    isa     => 'Str',
-    default => 'http://www1.folha.uol.com.br/ciencia/'
+    isa     => 'HashRef',
+    default => sub {
+        {
+            'Ciência' => 'http://www1.folha.uol.com.br/ciencia/',
+            Mundo      => 'http://www1.folha.uol.com.br/mundo/',
+            Economia   => 'http://www1.folha.uol.com.br/mercado/',
+        };
+    },
 );
 
 has 'spider' => (
@@ -25,13 +32,15 @@ sub init {
 }
 
 sub all_news {
-    my $self    = shift;
-    my $content = $self->spider->agent->get( $self->link );
-    $self->itens($content);
+    my $self = shift;
+    foreach my $link ( keys %{ $self->links } ) {
+        my $content = $self->spider->agent->get( $self->links->{$link} );
+        $self->itens( $content, { categoria => $link } );
+    }
 }
 
 sub itens {
-    my ( $self, $html ) = @_;
+    my ( $self, $html, $categoria ) = @_;
     my $tree  = HTML::TreeBuilder::XPath->new_from_content($html);
     my @itens = $tree->findnodes('//div[@id="newslist"]//a');
     foreach my $item (@itens) {
@@ -41,6 +50,7 @@ sub itens {
             {
                 title       => $item->as_text,
                 source_link => $item->attr('href'),
+                categoria   => $categoria->{categoria},
             }
         );
     }
@@ -52,7 +62,7 @@ sub parser_news {
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
 
     $infs->{author}   = $tree->findvalue('//div[@id="articleBy"]');
-    $infs->{category} = 'Ciência';
+    $infs->{category} = $infs->{categoria};
     $infs->{source}   = $self->source;
     $infs->{text}     = $tree->findvalue('//div[@id="articleNew"]/p');
 
