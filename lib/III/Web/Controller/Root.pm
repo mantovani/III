@@ -4,6 +4,7 @@ use namespace::autoclean;
 use Data::Dumper;
 use DateTime;
 use WWW::Sitemap::XML;
+use URI::Encode qw/uri_encode/;
 
 BEGIN { extends 'Catalyst::Controller' }
 
@@ -39,7 +40,8 @@ sub base : Chained('/') : PathPart('') : CaptureArgs(0) {
     $c->stash->{id} = sub {
         shift->{_id};
     };
-    $c->stash->{dump} = sub { Dumper @_ };
+    $c->stash->{dump}       = sub { Dumper @_ };
+    $c->stash->{uri_encode} = sub { uri_encode(shift) };
 }
 
 sub sitemap : Chained('base') : PathPart('sitemap.xml') : Args(0) {

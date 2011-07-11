@@ -20,16 +20,14 @@ sub keywords {
     my $keywords;
 
     $words =~ s/[\,\.]/ /g;
-
+	$words =~ s/["']|//g;
     my @all_words = split /\s/, $words;
   ADD: foreach my $word (@all_words) {
         $word = lc($word);
         my $verb_forms = unconj($word);
 
         foreach my $prepo ( @{ $self->preposicoes } ) {
-
             next ADD if $prepo =~ $word;
-
         }
 
         $keywords .= " $word" if scalar keys %{$verb_forms} == 0;

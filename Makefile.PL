@@ -18,6 +18,8 @@ requires 'namespace::autoclean';
 requires 'Catalyst::Plugin::Unicode';
 requires 'Text::Iconv';
 requires 'DateTime';
+requires 'Lingua::PT::UnConjugate';
+requires 'URI::Encode';
 
 # Backend
 requires 'MongoDB';
