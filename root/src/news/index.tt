@@ -1,6 +1,6 @@
 <div align="center">
         <h1>Not&iacute;cias Global</h1>
-		<h2>A sua fonte de conhecimento global</h2>
+		<h2>Porque Global &eacute; nome pr&oacute;prio</h2>
  </div>
 [% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global a super fonte de conhecimento" %]
 <p><b>&Uacute;ltimas Not&iacute;cias</b></p>
