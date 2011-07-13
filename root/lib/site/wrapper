@@ -21,15 +21,15 @@
 	<body> 
 	[% INCLUDE category.tt %]
 
-
 <div align="center">
-<iframe src="http://smartad.mercadolivre.com.br/jm/SmartAd?tool=5956525&creativity=38806&new=Y&ovr=N&bgcol=FFFFFF&brdcol=000000&txtcol=006600&lnkcol=0000FF&hvrcol=FF0000&prccol=FF0000&word=ciência&word=tecnologia&word=economia&site=MLB" 
+<iframe src="http://pmssrv.mercadolivre.com.br/jm/PmsSrv?tool=5958522&creativity=38003&new=N&ovr=Y" 
 width="468" height="60" scrolling="no" frameborder="0" marginheight="0" marginwidth="0">
 </iframe>
 </div>
 
 
 	[% content %]
+
 
 	</body>
 
