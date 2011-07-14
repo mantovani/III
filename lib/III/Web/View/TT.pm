@@ -9,6 +9,7 @@ __PACKAGE__->config(
     {
         TEMPLATE_EXTENSION => '.tt',
         render_die         => 1,
+        DEFAULT_ENCODING   => 'utf-8',
         INCLUDE_PATH       => [
             III::Web->path_to( 'root', 'src' ),
             III::Web->path_to( 'root', 'lib' )

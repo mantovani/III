@@ -6,6 +6,8 @@ use DateTime;
 use WWW::Sitemap::XML;
 use URI::Encode qw/uri_encode uri_decode/;
 
+use utf8;
+
 BEGIN { extends 'Catalyst::Controller' }
 
 #
