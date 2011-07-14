@@ -1,7 +1,7 @@
 package III::Web::Controller::News;
 use Moose;
 use namespace::autoclean;
-use Text::Iconv;
+use Text::Unaccent;
 use MongoDB::OID;
 use Encode;
 use DateTime;
@@ -61,7 +61,7 @@ sub base : Chained('/base') : PathPart('noticias') : CaptureArgs(0) {
     $c->stash->{no_accents} = sub {
         my $text = shift;
         $text =~ s/[^\w\s]//g;
-        return Text::Iconv->new( 'UTF-8', 'UTF-8//TRANSLIT' )->convert($text);
+        return unac_string( 'utf8', $text );
     };
 
     $c->stash->{url_friendly} = sub {
