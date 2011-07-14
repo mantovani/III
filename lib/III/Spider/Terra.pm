@@ -83,6 +83,8 @@ sub parser_news {
         $infs->{keywords} = [ split /,/, $keywords->attr('content') ];
     }
 
+    return unless ( $infs->{text} );
+
     $self->spider->store($infs);
     $tree->delete;
 }
