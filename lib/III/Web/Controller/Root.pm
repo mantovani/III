@@ -4,7 +4,7 @@ use namespace::autoclean;
 use Data::Dumper;
 use DateTime;
 use WWW::Sitemap::XML;
-use URI::Encode qw/uri_encode uri_decode/;
+use URI::Encode qw/uri_encode/;
 
 use utf8;
 
@@ -44,7 +44,6 @@ sub base : Chained('/') : PathPart('') : CaptureArgs(0) {
     };
     $c->stash->{dump}       = sub { Dumper @_ };
     $c->stash->{uri_encode} = sub { uri_encode(shift) };
-    $c->stash->{uri_decode} = sub { uri_decode(shift) };
 }
 
 sub sitemap : Chained('base') : PathPart('sitemap.xml') : Args(0) {
