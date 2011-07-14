@@ -6,6 +6,7 @@ use MongoDB::OID;
 use Encode;
 use DateTime;
 use Data::Page;
+use utf8;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -60,7 +61,7 @@ sub base : Chained('/base') : PathPart('noticias') : CaptureArgs(0) {
     $c->stash->{no_accents} = sub {
         my $text = shift;
         $text =~ s/[^\w\s]//g;
-        return Text::Iconv->new( 'UTF-8', 'ASCII//TRANSLIT' )->convert($text);
+        return Text::Iconv->new( 'UTF-8', 'UTF-8//TRANSLIT' )->convert($text);
     };
 
     $c->stash->{url_friendly} = sub {
