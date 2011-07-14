@@ -1,15 +1,25 @@
 package III::Web::Model::MongoDB;
 
 use Moose;
-BEGIN { extends 'Catalyst::Model::MongoDB' };
+BEGIN { extends 'Catalyst::Model::MongoDB' }
 
 __PACKAGE__->config(
-	host => 'localhost',
-	port => '27017',
-	dbname => 'iii',
-	collectionname => '',
-	gridfs => '',
+    host           => 'localhost',
+    port           => '27017',
+    dbname         => 'iii',
+    collectionname => '',
+    gridfs         => '',
 );
+
+sub all_categorys {
+    shift->c('category')->query( {}, { sort_by => { category => 1 } } );
+}
+
+sub last_by_category {
+    my ( $self, $category ) = @_;
+    $self->c('news')->query( { category => $category },
+        { limit => 10, sort_by => { timestamp => -1 } } );
+}
 
 =head1 NAME
 
