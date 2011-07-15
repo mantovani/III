@@ -1,16 +1,11 @@
 .news {
-	width:65%;
+	width:80%;
 	float:left;
 }
 
 .menu {
 	float:right;
 	 width:20%;
-}
-
-.news_money {
-	float:left;
-	width:10%;
 }
 
 .last_news {

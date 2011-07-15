@@ -22,7 +22,7 @@
 	[% INCLUDE category.tt %]
 
 <div align="center">
-<!-- LOMADEE - BEGIN --><div style="width:468px;height:60px;overflow:hidden;"><script type="text/javascript" language="javascript" >lmd_source="23222337";lmd_si="33518799";lmd_pu="22486613";lmd_c="BR";lmd_wi="468";lmd_he="60";</script><script src="http://image.lomadee.com/js/ad_lomadee.js" type="text/javascript" language="javascript"></script><a href="http://www.lomadee.com/" style="font-size:10px;"><div align="right">Lomadee, uma nova espécie na web. A maior plataforma de afiliados da América Latina.</div></a></div><!-- LOMADEE - END -->
+<!-- BEGIN QUEDESCONTO - TOP OFERTAS --><div id="quedesconto" style="width:728px;height:90px;overflow:hidden; margin: 0px; padding: 0px;"><script type="text/javascript" language="javascript">lmd_source="23222380";banner_id="2";i_w="728";i_h="90";c="BR";</script><script src="http://apps3rd.lomadee.com/483/js/source.js"type="text/javascript" language="javascript"></script></div><!-- END QUEDESCONTO - TOP OFERTAS -->
 </div>
 
 
