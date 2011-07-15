@@ -1,5 +1,5 @@
 .news {
-	width:75%;
+	width:65%;
 	float:left;
 }
 
@@ -8,8 +8,12 @@
 	 width:20%;
 }
 
+.news_money {
+	float:left;
+	width:10%;
+}
+
 .last_news {
 	float:left;	
 	width:50%;
-
 }
