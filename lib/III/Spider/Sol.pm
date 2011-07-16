@@ -51,7 +51,6 @@ sub parser_news {
     my ( $self, $news, $infs ) = @_;
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
 
-    $infs->{author}   = 'Desconhecido';
     $infs->{category} = 'Tecnologia';
     $infs->{source}   = $self->source;
 

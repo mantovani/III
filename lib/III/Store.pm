@@ -5,6 +5,8 @@ use MongoDB;
 use III::Glue;
 use utf8;
 
+with 'III::Store::MetaText';
+
 has 'db' => (
     is      => 'ro',
     isa     => 'Object',
@@ -12,14 +14,6 @@ has 'db' => (
         MongoDB::Connection->new( host => '127.0.0.1', port => 27017 );
     },
     lazy => 1
-);
-
-has 'infs_attrs' => (
-    is      => 'ro',
-    isa     => 'ArrayRef',
-    default => sub {
-        [qw/category title source source_link text/];
-    }
 );
 
 has 'iiiglue' => (
@@ -44,18 +38,6 @@ III::Store is the class to store the date.
     }
 
 	
-=cut
-
-before 'store' => sub {
-    my ( $self, $infs_traits ) = @_;
-    my $infs = $self->_trait_infs($infs_traits);
-    foreach my $check ( @{ $self->infs_attrs } ) {
-        print STDERR qq{"$check" undefined in store}
-          if $infs->{$check} !~ /\w/;
-        return;
-    }
-};
-
 =head2 store
 
 Save the information in the database. Just if was not stored before.
@@ -67,9 +49,9 @@ sub store {
 
     # if the news don't exists save
     if ( $self->iiiglue->check( $infs->{source_link} ) ) {
-        $infs->{timestamp} = time;
-        $self->index_category( $infs->{category} );
-        $self->db->iii->news->insert($infs);
+        my $meta_infs = $self->add_fields($infs);
+        $self->index_category( $meta_infs->{category} );
+        $self->db->iii->news->insert($meta_infs);
     }
 }
 
@@ -79,14 +61,6 @@ sub index_category {
     unless ($check) {
         $self->db->iii->category->insert( { category => $category } );
     }
-}
-
-sub _trait_infs {
-    my ( $self, $infs ) = @_;
-    if ( !$infs->{author} ) {
-        $infs->{author} = 'Desconhecido';
-    }
-    return $infs;
 }
 
 return 1;

@@ -52,7 +52,6 @@ sub parser_news {
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
 
     $infs->{sub_title} = $tree->findvalue('//div[@class="materia-titulo"]//h2');
-    $infs->{author}    = 'Desconhecido';
     $infs->{category}  = 'Games';
     $infs->{source}    = $self->source;
 
