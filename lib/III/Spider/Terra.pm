@@ -67,7 +67,7 @@ sub parser_news {
     # - Retirando tag em
     $news =~ s#<em>.+?</em>##ig;
     $news =~
-s#<a href=" http://videostore.terra.com.br/Web/AluguelECompra " class="textolinkbold">.+?</a>##ig;
+s#<a href=.+?class="textolinkbold">.+?</a>##ig;
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
 
     if ( $tree->as_HTML =~ m{<dt>(.+?)</dt>} ) {
