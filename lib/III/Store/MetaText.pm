@@ -8,7 +8,7 @@ has 'infs_attrs' => (
     is      => 'ro',
     isa     => 'ArrayRef',
     default => sub {
-        [qw/category title source text sub_title/];
+        [qw/category title source text sub_title author/];
     }
 );
 
@@ -30,7 +30,8 @@ sub _add_meta_text {
     my ( $self, $infs ) = @_;
     foreach my $attr ( @{ $self->infs_attrs } ) {
         if ( $infs->{$attr} ) {
-            $infs->{meta_text}->{$attr} = $self->_no_accent( $infs->{$attr} );
+            $infs->{meta_text}->{$attr} =
+              lc( $self->_no_accent( $infs->{$attr} ) );
         }
     }
     return $infs;
@@ -39,7 +40,7 @@ sub _add_meta_text {
 sub _check_author {
     my ( $self, $infs ) = @_;
     if ( !$infs->{author} ) {
-        $infs->{author} = -1;
+        $infs->{author} = 0;
     }
     return $infs;
 }
