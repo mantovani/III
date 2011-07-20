@@ -10,10 +10,10 @@
 
 .last_news { 
     display: block; 
-    float: left; 
+    float: right; 
     margin-right: 1%; 
     margin-left: 1%; 
-    width: 42%; 
+    width: 48%; 
 }
 
 p {
