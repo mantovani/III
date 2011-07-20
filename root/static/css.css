@@ -1,5 +1,5 @@
 .news {
-	width:80%;
+	width:75%;
 	float:left;
 }
 
@@ -11,9 +11,7 @@
 .last_news {
 	float:left;	
 	width:50%;
-   display: block;
-   height: 10%;
-
+	display: block;
 }
 
 p {

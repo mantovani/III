@@ -51,7 +51,7 @@ sub base : Chained('/base') : PathPart('noticias') : CaptureArgs(0) {
         foreach my $dot (@dots) {
             $count++;
             $result .= $dot . '.' if $dot =~ /\w/;
-            if ( $count % 6 == 0 ) {
+            if ( $count % 4 == 0 ) {
                 $result .= '<br /><br />';
             }
         }
