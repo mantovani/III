@@ -8,10 +8,11 @@
 	 width:20%;
 }
 
-.last_news {
-	float:left;	
-	width:50%;
-	display: block;
+.last_news { 
+    display: block; 
+    float: left; 
+    margin-right: 4%; 
+    width: 45%; 
 }
 
 p {
