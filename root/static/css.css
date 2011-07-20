@@ -11,4 +11,24 @@
 .last_news {
 	float:left;	
 	width:50%;
+   display: block;
+   height: 10%;
+
+}
+
+p {
+	font-family: calibri, arial, helvetica, serif;
+	font-size: 13px;
+}
+
+h1 {
+	font-size: 23px;
+}
+
+h2 {
+	font-size: 20px;
+}
+
+h3 {
+	font-size: 17px;
 }

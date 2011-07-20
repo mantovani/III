@@ -1,5 +1,5 @@
 <div align="center">
-        <h1>Not&iacute;cias Global</h1>
+		<img src="/static/images/logo.png"></img>
 		<h2>Porque Global &eacute; nome pr&oacute;prio</h2>
  </div>
 [% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global a super fonte de conhecimento" %]
