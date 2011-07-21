@@ -7,7 +7,10 @@
 
 [% FOREACH my_category IN c.model('MongoDB').all_categorys.all %]
 	<div class="last_news">
-	<h3>[% my_category.category %]</h3>
+	<h3>
+		[% my_category.category %]
+		<a href="[% c.uri_for(c.controller('News').action_for('feed'),my_category.category) %]"><img src="/static/images/feed.png"></img></a>
+	</h3>
 	[% FOREACH my_news IN c.model('MongoDB').last_by_category(my_category.category).all %]
 
 		[% SET my_date = date(my_news.timestamp) %]

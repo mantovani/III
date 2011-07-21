@@ -20,6 +20,7 @@ requires 'Text::Unaccent';
 requires 'DateTime';
 requires 'Lingua::PT::UnConjugate';
 requires 'URI::Encode';
+requires 'Catalyst::View::XML::Feed';
 
 # Backend
 requires 'MongoDB';

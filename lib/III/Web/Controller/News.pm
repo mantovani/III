@@ -76,6 +76,18 @@ sub base : Chained('/base') : PathPart('noticias') : CaptureArgs(0) {
         return $dt;
     };
 
+    $c->stash->{news_url} = sub {
+        my ( $c, $item ) = @_;
+        my $date = $c->stash->{date}->( $item->{timestamp} );
+        my $url  = $c->uri_for(
+            $c->controller('News')->action_for('news'),
+            $c->stash->{no_accents}->( $item->{category} ),
+            $date->year,
+            $c->stash->{url_friendly}->( $item->{title} ) . '-'
+              . $c->stash->{id}->($item)
+        );
+        return $url;
+    };
 }
 
 sub index : Chained('base') : PathPart('') : Args(0) {
@@ -118,11 +130,8 @@ sub category : Chained('base') : PathPart('') : Args(1) {
         $skip = $limit * ( $c->req->params->{page} - 1 );
     }
 
-    my $find =
-      $c->model('MongoDB')->c('news')->find( { category => $category } );
-
-    my $result = $find->limit($limit)->skip($skip)->sort( { timestamp => -1 } );
-
+    my ( $result, $find ) =
+      $c->model('MongoDB')->by_category( $limit, $skip, $category );
     my $page = Data::Page->new();
     $page->total_entries( $find->count );
     $page->entries_per_page($limit);
@@ -130,6 +139,23 @@ sub category : Chained('base') : PathPart('') : Args(1) {
 
     $c->stash->{pager}         = $page;
     $c->stash->{category_news} = $result;
+}
+
+sub feed : Chained('base') : PathPart('feed') : Args(1) {
+    my ( $self, $c, $category ) = @_;
+    $c->stash->{feed} = {
+        format      => 'RSS 1.0',
+        id          => $c->req->base,
+        title       => decode( 'utf8', $category ),
+        description => "Últimas notícias sobre: "
+          . decode( 'utf8', $category ),
+        link => $c->uri_for(
+            $c->controller('News')->action_for('category'), $category
+        ),
+        modified => DateTime->now,
+        entries  => $c->model('MongoDB')->feed_category( $category, $c ),
+    };
+    $c->forward('XML::Feed');
 }
 
 =head1 AUTHOR

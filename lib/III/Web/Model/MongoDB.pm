@@ -1,6 +1,9 @@
 package III::Web::Model::MongoDB;
 
 use Moose;
+use DateTime;
+use Encode;
+use utf8;
 BEGIN { extends 'Catalyst::Model::MongoDB' }
 
 __PACKAGE__->config(
@@ -19,6 +22,50 @@ sub last_by_category {
     my ( $self, $category ) = @_;
     $self->c('news')->query( { category => $category },
         { limit => 10, sort_by => { timestamp => -1 } } );
+}
+
+sub by_category {
+    my ( $self, $limit, $skip, $category ) = @_;
+    my $find = $self->c('news')->find( { category => $category } );
+    return ( $find->limit($limit)->skip($skip)->sort( { timestamp => -1 } ),
+        $find );
+
+}
+
+sub feed_category {
+    my ( $self, $category, $c ) = @_;
+    my ( $skip, $limit ) = ( 0, 20 );
+
+    my ( $itens, $find ) = $self->by_category( $limit, $skip, $category );
+
+    my @entries;
+
+    foreach my $item ( $itens->all ) {
+        my $url = $self->_url_news( $c, $item );
+        my $entrie = {
+            id       => $url,
+            link     => $url,
+            title    => encode( 'latin1', $item->{title} ),
+            modified => DateTime->from_epoch( epoch => $item->{timestamp} ),
+            content =>
+              encode( 'latin1', $c->stash->{few_words}->( $item->{text} ) ),
+        };
+        push @entries, $entrie;
+    }
+    return \@entries;
+}
+
+sub _url_news {
+    my ( $self, $c, $item ) = @_;
+    my $date = $c->stash->{date}->( $item->{timestamp} );
+    my $url  = $c->uri_for(
+        $c->controller('News')->action_for('news'),
+        $c->stash->{no_accents}->( $item->{category} ),
+        $date->year,
+        $c->stash->{url_friendly}->( $item->{title} ) . '-'
+          . $c->stash->{id}->($item)
+    );
+    return $url;
 }
 
 =head1 NAME
