@@ -2,8 +2,7 @@
 	<h1>[% category %]</h1>
 </div>
 [% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global - $category " %]
-[% FOREACH my_news IN category_news.all %]
-
+[% WHILE (my_news = (category_news.next)) %]
 
 [% SET my_date = date(my_news.timestamp) %]
 

@@ -181,7 +181,7 @@ sub search : Chained('base') : PathPart('busca') : Args(1) {
     $page->current_page( $c->req->params->{page} // 1 );
 
     $c->stash->{pager}         = $page;
-    $c->stash->{category_news} = $result;
+    $c->stash->{search_news} = $result;
 }
 
 =head1 AUTHOR
