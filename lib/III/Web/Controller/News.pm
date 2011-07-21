@@ -158,30 +158,56 @@ sub feed : Chained('base') : PathPart('feed') : Args(1) {
     $c->forward('XML::Feed');
 }
 
-sub search : Chained('base') : PathPart('busca') : Args(1) {
-    my ( $self, $c, $busca ) = @_;
+sub search : Chained('base') : PathPart('busca') : Args(0) {
+    my ( $self, $c ) = @_;
 
-    $c->stash->{title}    = decode( "utf8", $busca );
-    $c->stash->{busca} = decode( "utf8", $busca );
+    if ( $c->req->params->{q} ) {
+        my $busca = $c->req->params->{q};
+        $c->stash->{title} = decode( "utf8", $busca );
+        $c->stash->{busca} = decode( "utf8", $busca );
 
-    $busca = lc $c->stash->{no_accents}->($busca);
+        $busca = lc $c->stash->{no_accents}->($busca);
 
-    my ( $limit, $skip ) = ( 20, 0 );
+        my ( $limit, $skip ) = ( 20, 0 );
 
-    # - skip untill next page :)
-    if ( $c->req->params->{page} ) {
-        $skip = $limit * ( $c->req->params->{page} - 1 );
+        # - skip untill next page :)
+        if ( $c->req->params->{page} ) {
+            $skip = $limit * ( $c->req->params->{page} - 1 );
+        }
+
+        my ( $result, $find ) =
+          $c->model('MongoDB')->by_search( $busca, $limit, $skip );
+        my $page = Data::Page->new();
+        $page->total_entries( $find->count );
+        $page->entries_per_page($limit);
+        $page->current_page( $c->req->params->{page} // 1 );
+
+        $c->stash->{pager}       = $page;
+        $c->stash->{search_news} = $result;
+
     }
+}
 
-    my ( $result, $find ) =
-      $c->model('MongoDB')->by_search( $busca, $limit, $skip );
-    my $page = Data::Page->new();
-    $page->total_entries( $find->count );
-    $page->entries_per_page($limit);
-    $page->current_page( $c->req->params->{page} // 1 );
+sub search_feed : Chained('base') : PathPart('busca_feed') : Args(0) {
+    my ( $self, $c ) = @_;
+    if ( $c->req->params->{q} ) {
+        my $busca = $c->req->params->{q};
 
-    $c->stash->{pager}         = $page;
-    $c->stash->{search_news} = $result;
+        $c->stash->{feed} = {
+            format      => 'RSS 1.0',
+            id          => $c->req->base,
+            title       => decode( 'utf8', $busca ),
+            description => "Últimas notícias sobre a busca: "
+              . decode( 'utf8', $busca ),
+            link => $c->uri_for(
+                $c->controller('News')->action_for('search'),
+                { q => $busca }
+            ),
+            modified => DateTime->now,
+            entries  => $c->model('MongoDB')->feed_search( $busca, $c ),
+        };
+        $c->forward('XML::Feed');
+    }
 }
 
 =head1 AUTHOR

@@ -31,3 +31,38 @@ h2 {
 h3 {
 	font-size: 17px;
 }
+
+.search {
+    margin-right: 10%; 
+    margin-left: 50%; 
+}
+
+.search_feed {
+    display: block; 
+    float: left; 
+    width: 15%; 
+    margin-left: 1%; 
+}
+
+.form_text {
+	padding-bottom: 4%;
+	width: 80%;
+	color: #000;
+	font-weight: bold;
+	font-size: 150%;
+}
+
+.form_submit {
+	width: 18%;
+	color: #000;
+	font-weight: bold;
+	font-size: 150%;
+}
+
+.social {
+    display: block; 
+    float: left; 
+    margin-left: 1%; 
+    width: 5%; 
+
+}

@@ -1,0 +1,4 @@
+<form method="get" action="[% c.uri_for(c.controller('News').action_for('search')) %]">
+	<input class="form_text" name="q" type="text" value="[% busca %]">
+	<input class="form_submit" type="submit" value="Busca">
+</form>

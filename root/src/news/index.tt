@@ -2,8 +2,9 @@
 		<img src="/static/images/logo.png"></img>
 		<h2>Porque Global &eacute; nome pr&oacute;prio</h2>
  </div>
-[% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global a super fonte de conhecimento" %]
-<p><b>&Uacute;ltimas Not&iacute;cias</b></p>
+[% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global, porque Global &eacute; nome pr&oacute;prio" %]
+
+<div class="search">[% INCLUDE site/search.tt %]</div>
 
 [% FOREACH my_category IN c.model('MongoDB').all_categorys.all %]
 	<div class="last_news">

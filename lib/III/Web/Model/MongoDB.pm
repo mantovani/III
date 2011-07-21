@@ -37,7 +37,11 @@ sub feed_category {
     my ( $skip, $limit ) = ( 0, 20 );
 
     my ( $itens, $find ) = $self->by_category( $limit, $skip, $category );
+    return $self->_encode_entris( $c, $itens, $find );
+}
 
+sub _encode_entris {
+    my ( $self, $c, $itens, $find ) = @_;
     my @entries;
 
     foreach my $item ( $itens->all ) {
@@ -53,6 +57,7 @@ sub feed_category {
         push @entries, $entrie;
     }
     return \@entries;
+
 }
 
 sub _url_news {
@@ -80,6 +85,14 @@ sub by_search {
     );
     return ( $find->limit($limit)->skip($skip)->sort( { timestamp => -1 } ),
         $find );
+}
+
+sub feed_search {
+    my ( $self, $busca, $c ) = @_;
+    my ( $skip, $limit ) = ( 0, 20 );
+
+    my ( $itens, $find ) = $self->by_search( $busca, $limit, $skip );
+    return $self->_encode_entris( $c, $itens, $find );
 }
 
 =head1 NAME

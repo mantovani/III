@@ -1,9 +1,15 @@
 <div align="center">
-	<h1>[% busca %]</h1>
-</div>
-[% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global - $category " %]
-[% WHILE (my_news = (search_news.next)) %]
+        <img src="/static/images/logo.png"></img>
+        <h2>Porque Global &eacute; nome pr&oacute;prio</h2>
+ </div>
+[% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global Busca - " _ busca %]
 
+<div class="search">
+	<a class="search_feed" href="[% c.uri_for(c.controller('News').action_for('search_feed'),{q => busca}) %]"><img src="/static/images/feed.png"></img></a>
+	[% INCLUDE site/search.tt %]
+</div>
+
+[% WHILE (my_news = (search_news.next)) %]
 
 [% SET my_date = date(my_news.timestamp) %]
 
