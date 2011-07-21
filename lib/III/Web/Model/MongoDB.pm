@@ -68,6 +68,20 @@ sub _url_news {
     return $url;
 }
 
+sub by_search {
+    my ( $self, $busca, $limit, $skip ) = @_;
+    my $find = $self->c('news')->find(
+        {
+            '$or' => [
+                { 'meta_text.title'   => qr/\s$busca\s|^$busca\s|\s$busca$/i },
+                { 'meta_text.text' => qr/\s$busca\s|^$busca\s|\s$busca$/i },
+            ]
+        }
+    );
+    return ( $find->limit($limit)->skip($skip)->sort( { timestamp => -1 } ),
+        $find );
+}
+
 =head1 NAME
 
 III::Web::Model::MongoDB - MongoDB Catalyst model component

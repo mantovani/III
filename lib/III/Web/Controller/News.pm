@@ -158,6 +158,32 @@ sub feed : Chained('base') : PathPart('feed') : Args(1) {
     $c->forward('XML::Feed');
 }
 
+sub search : Chained('base') : PathPart('busca') : Args(1) {
+    my ( $self, $c, $busca ) = @_;
+
+    $c->stash->{title}    = decode( "utf8", $busca );
+    $c->stash->{busca} = decode( "utf8", $busca );
+
+    $busca = $c->stash->{no_accents}->($busca);
+
+    my ( $limit, $skip ) = ( 20, 0 );
+
+    # - skip untill next page :)
+    if ( $c->req->params->{page} ) {
+        $skip = $limit * ( $c->req->params->{page} - 1 );
+    }
+
+    my ( $result, $find ) =
+      $c->model('MongoDB')->by_search( $busca, $limit, $skip );
+    my $page = Data::Page->new();
+    $page->total_entries( $find->count );
+    $page->entries_per_page($limit);
+    $page->current_page( $c->req->params->{page} // 1 );
+
+    $c->stash->{pager}         = $page;
+    $c->stash->{category_news} = $result;
+}
+
 =head1 AUTHOR
 
 Daniel Mantovani,,,,
