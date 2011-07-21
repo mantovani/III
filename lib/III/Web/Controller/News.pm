@@ -164,7 +164,7 @@ sub search : Chained('base') : PathPart('busca') : Args(1) {
     $c->stash->{title}    = decode( "utf8", $busca );
     $c->stash->{busca} = decode( "utf8", $busca );
 
-    $busca = $c->stash->{no_accents}->($busca);
+    $busca = lc $c->stash->{no_accents}->($busca);
 
     my ( $limit, $skip ) = ( 20, 0 );
 
