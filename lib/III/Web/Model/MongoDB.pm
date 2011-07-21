@@ -73,8 +73,8 @@ sub by_search {
     my $find = $self->c('news')->find(
         {
             '$or' => [
-                { 'meta_text.title'   => qr/\s$busca\s|^$busca\s|\s$busca$/ },
-                { 'meta_text.text' => qr/\s$busca\s|^$busca\s|\s$busca$/ },
+                { 'meta_text.title' => qr/$busca/ },
+                { 'meta_text.text'  => qr/$busca/ },
             ]
         }
     );
