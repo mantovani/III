@@ -65,3 +65,9 @@ h3 {
     margin-left: 1%; 
     width: 5%; 
 }
+.no_float {
+    display: block; 
+    float: left; 
+    margin-left: 1%; 
+    width: 100%; 
+}

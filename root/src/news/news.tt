@@ -8,32 +8,26 @@
 <div align="center">
 <!-- BEGIN QUEDESCONTO - TOP OFERTAS --><div id="quedesconto" style="width:728px;height:90px;overflow:hidden; margin: 0px; padding: 0px;"><script type="text/javascript" language="javascript">lmd_source="23222380";banner_id="2";i_w="728";i_h="90";c="BR";</script><script src="http://apps3rd.lomadee.com/483/js/source.js"type="text/javascript" language="javascript"></script></div><!-- END QUEDESCONTO - TOP OFERTAS -->
 </div>
-
-
 [% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global - $news.title " %]
-<div class="news" itemscope itemtype="[% c.uri_for(c.controller("News").action_for("category"),news.category) %]">
-	<h1 itemprop="nome">[% news.title %]</h1>
+<div class="no_float">
+	<div class="news" itemscope itemtype="[% c.uri_for(c.controller("News").action_for("category"),news.category) %]">
+		<h1 itemprop="nome">[% news.title %]</h1>
 	
-	[% IF news.sub_title %]
-		<h2 itemprop="subtitulo"><i>[% news.sub_title %]</i></h2>
-	[% END %]
-	<p itemprop="noticia">[% better_view(news.text) %]</p>
-    <p itemprop="data"><b>[% date(news.timestamp).ymd("/") %]</b></p>
+		[% IF news.sub_title %]
+			<h2 itemprop="subtitulo"><i>[% news.sub_title %]</i></h2>
+		[% END %]
+		<p itemprop="noticia">[% better_view(news.text) %]</p>
+	    <p itemprop="data"><b>[% date(news.timestamp).ymd("/") %]</b></p>
 
-	<p itemprop="fonte">Fonte: [% news.source %] - [% news.source_link %]</p>
+		<p itemprop="fonte">Fonte: [% news.source %] - [% news.source_link %]</p>
 
-	[% IF news.author %]
-		<p itemprop="autor">Autor: [% news.author%]</p>
-	[% END %]
-
-
+		[% IF news.author %]
+			<p itemprop="autor">Autor: [% news.author%]</p>
+		[% END %]
+	</div>
+	<div class="menu">
+		[% INCLUDE social/twitter_search.tt %]
+	</div>
+	[% INCLUDE social/comment.tt %]
 </div>
-
-<div class="menu">
-	[% INCLUDE social/twitter_search.tt %]
-</div>
-
-
-[% INCLUDE social/comment.tt %]
-
 [% END %]
