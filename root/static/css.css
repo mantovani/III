@@ -68,6 +68,5 @@ h3 {
 .no_float {
     display: block; 
     float: left; 
-    margin-left: 1%; 
     width: 100%; 
 }
