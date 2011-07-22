@@ -29,6 +29,7 @@ requires 'Digest::MD5';
 requires 'WWW::Mechanize';
 requires 'TryCatch';
 requires 'Catalyst::Model::MongoDB';
+requires 'HTML::Strip';
 
 requires
   'Config::General';  # This should reflect the config file format you've chosen

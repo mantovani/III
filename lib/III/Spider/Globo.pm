@@ -3,6 +3,7 @@ package III::Spider::Globo;
 use III::Spider;
 use Moose::Role;
 use HTML::TreeBuilder::XPath;
+use HTML::Strip;
 use Data::Dumper;
 
 has 'link' => (
@@ -49,13 +50,25 @@ sub itens {
 
 sub parser_news {
     my ( $self, $news, $infs ) = @_;
+
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
 
     $infs->{sub_title} = $tree->findvalue('//div[@class="materia-titulo"]//h2');
     $infs->{category}  = 'Games';
     $infs->{source}    = $self->source;
 
-    $infs->{text} = $tree->findvalue('//div[@id="materia-letra"]');
+    my $hs = HTML::Strip->new(
+        striptags   => ['strong'],
+        emit_spaces => 0
+    );
+
+    $infs->{text} =
+      $hs->parse(
+        $tree->findnodes('//div[@id="materia-letra"]')->[0]->as_HTML );
+    $hs->eof;
+
+    return unless $infs->{text};
+
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];
     if ($keywords) {
         $infs->{keywords} = [ split /,/, $keywords->attr('content') ];
