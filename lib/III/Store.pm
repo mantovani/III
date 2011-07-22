@@ -51,7 +51,23 @@ sub store {
     if ( $self->iiiglue->check( $infs->{source_link} ) ) {
         my $meta_infs = $self->add_fields($infs);
         $self->index_category( $meta_infs->{category} );
-        $self->db->iii->news->insert($meta_infs);
+
+        # check identical title news
+		# As vezes os sites de noticias postam a noticia com o titulo identico em seguida
+		# so que com a url diferente, ai se acontece isso o Store busca esse titulo e da
+		# um update com "conteudo" mais novo.
+        if ( $self->iiiglue->check( 'title:' . $infs->{meta_text}->{title} ) ) {
+            $self->db->iii->news->insert($meta_infs);
+            print "Novo Item\n";
+        }
+        else {
+            my $meta_title = $infs->{meta_text}->{title};
+            $self->db->iii->news->update(
+                { 'meta_text.title' => qr/$meta_title/ },
+                { '$set'            => $infs },
+            );
+            print "Velho item\n";
+        }
     }
 }
 
