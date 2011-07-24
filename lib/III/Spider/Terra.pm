@@ -7,6 +7,8 @@ use HTML::TreeBuilder::XPath;
 use Data::Dumper;
 use Encode;
 
+with 'III::Spider::Role';
+
 has 'link' => (
     is      => 'ro',
     isa     => 'HashRef',
@@ -65,11 +67,9 @@ sub parser_news {
     my ( $self, $news, $infs ) = @_;
 
     # - Retirando tag em
-    $news =~ s#<em>.+?</em>##ig;
-    $news =~
-s#<a href=.+?class="textolinkbold">.+?</a>##ig;
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
-
+    $self->erase_tag( $tree, $_ )
+      for ( '//em', '//a[@class="textolinkbold"]' );
     if ( $tree->as_HTML =~ m{<dt>(.+?)</dt>} ) {
         $infs->{author} = $1;
     }
@@ -78,7 +78,10 @@ s#<a href=.+?class="textolinkbold">.+?</a>##ig;
     $infs->{sub_title} =
       $tree->findvalue('//div[@class="img-article fontsize p1 printing"]/p');
     $infs->{source} = $self->source;
-    $infs->{text}   = $tree->findvalue('//div[@id="SearchKey_Text1"]');
+
+    my $text = $tree->findnodes('//div[@id="SearchKey_Text1"]')->[0];
+    $self->erase_tag( $text, './/p/a' );
+    $infs->{text} = $text->as_text;
 
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];
     if ($keywords) {
