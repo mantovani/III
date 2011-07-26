@@ -22,6 +22,16 @@ has 'iiiglue' => (
     default => sub { III::Glue->new }
 );
 
+has 'attrs' => (
+    is      => 'ro',
+    isa     => 'ArrayRef',
+    default => sub {
+        [
+            qw/category title sub_title source source_link author keywords text content/
+        ];
+    }
+);
+
 =head1 SYNOPSIS
 
 III::Store is the class to store the date.
@@ -35,6 +45,7 @@ III::Store is the class to store the date.
         author      => '',
         keywords    => [],
 		text		=> '',
+		content		=> '',
     }
 
 	
@@ -44,18 +55,29 @@ Save the information in the database. Just if was not stored before.
 
 =cut
 
+before 'store' => sub {
+    my ( $self, $infs ) = @_;
+
+    foreach my $key ( keys %{$infs} ) {
+        die "Invalid attr:{$key}" if !grep { $key eq $_ } @{ $self->attrs };
+    }
+
+};
+
 sub store {
     my ( $self, $infs ) = @_;
+
+    my @mains = qw/category title text content source source_link/;
+
+    for my $main (@mains) {
+        return if !$infs->{$main};
+    }
 
     # if the news don't exists save
     if ( $self->iiiglue->check( $infs->{source_link} ) ) {
         my $meta_infs = $self->add_fields($infs);
         $self->index_category( $meta_infs->{category} );
 
-        # check identical title news
-		# As vezes os sites de noticias postam a noticia com o titulo identico em seguida
-		# so que com a url diferente, ai se acontece isso o Store busca esse titulo e da
-		# um update com "conteudo" mais novo.
         if ( $self->iiiglue->check( 'title:' . $infs->{meta_text}->{title} ) ) {
             $self->db->iii->news->insert($meta_infs);
         }

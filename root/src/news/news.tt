@@ -16,8 +16,15 @@
 		[% IF news.sub_title %]
 			<h2 itemprop="subtitulo"><i>[% news.sub_title %]</i></h2>
 		[% END %]
+		[% IF news.content %]
+		<div itemprop="noticia">
+			[% news.content %]
+		</div>
+		[% ELSE %]
 		<p itemprop="noticia">[% better_view(news.text) %]</p>
-	    <p itemprop="data"><b>[% date(news.timestamp).ymd("/") %]</b></p>
+	    [% END %]
+
+		<p itemprop="data"><b>[% date(news.timestamp).ymd("/") %]</b></p>
 
 		<p itemprop="fonte">Fonte: [% news.source %] - [% news.source_link %]</p>
 
