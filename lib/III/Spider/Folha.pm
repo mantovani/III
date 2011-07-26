@@ -6,6 +6,8 @@ use HTML::TreeBuilder::XPath;
 use Data::Dumper;
 use utf8;
 
+with 'III::Spider::Role';
+
 has 'links' => (
     is      => 'ro',
     isa     => 'HashRef',
@@ -35,12 +37,12 @@ sub all_news {
     my $self = shift;
     foreach my $link ( keys %{ $self->links } ) {
         my $content = $self->spider->agent->get( $self->links->{$link} );
-        $self->itens( $content, { categoria => $link } );
+        $self->itens( $content, { category => $link } );
     }
 }
 
 sub itens {
-    my ( $self, $html, $categoria ) = @_;
+    my ( $self, $html, $category ) = @_;
     my $tree  = HTML::TreeBuilder::XPath->new_from_content($html);
     my @itens = $tree->findnodes('//div[@id="newslist"]//a');
     foreach my $item (@itens) {
@@ -50,7 +52,7 @@ sub itens {
             {
                 title       => $item->as_text,
                 source_link => $item->attr('href'),
-                categoria   => $categoria->{categoria},
+                category   => $category->{category},
             }
         );
     }
@@ -61,17 +63,19 @@ sub parser_news {
     my ( $self, $news, $infs ) = @_;
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
 
+    $self->erase_tag( $tree, '//p[@class="tagline"]' );
     $infs->{author}   = $tree->findvalue('//div[@id="articleBy"]');
-    $infs->{category} = $infs->{categoria};
+    $infs->{category} = $infs->{category};
     $infs->{source}   = $self->source;
-    $infs->{text}     = $tree->findvalue('//div[@id="articleNew"]/p');
+    my @texts = $tree->findnodes('//div[@id="articleNew"]/p');
 
-    return if length( $infs->{text} ) < 20;
-
-    if ( $tree->exists('//p[@class="wideVideoPlayer"]') ) {
-        my $video = $tree->findnodes('//p[@class="wideVideoPlayer"]')->[0];
-        $infs->{text} .= $video->as_HTML;
+    foreach my $text (@texts) {
+        $self->erase_tag( $text, './/a' );
+        $infs->{text} .= $text->as_text;
+        $infs->{content} .= $self->html_clean->clean( $text->as_HTML );
     }
+
+    return unless $infs->{text};
 
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];
     if ($keywords) {

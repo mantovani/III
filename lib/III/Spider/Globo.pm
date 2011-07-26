@@ -3,8 +3,9 @@ package III::Spider::Globo;
 use III::Spider;
 use Moose::Role;
 use HTML::TreeBuilder::XPath;
-use HTML::Strip;
 use Data::Dumper;
+
+with 'III::Spider::Role';
 
 has 'link' => (
     is      => 'ro',
@@ -52,20 +53,15 @@ sub parser_news {
     my ( $self, $news, $infs ) = @_;
 
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
+    $self->erase_tag( $tree, '//strong' );
 
     $infs->{sub_title} = $tree->findvalue('//div[@class="materia-titulo"]//h2');
     $infs->{category}  = 'Games';
     $infs->{source}    = $self->source;
 
-    my $hs = HTML::Strip->new(
-        striptags   => ['strong'],
-        emit_spaces => 0
-    );
-
-    $infs->{text} =
-      $hs->parse(
-        $tree->findnodes('//div[@id="materia-letra"]')->[0]->as_HTML );
-    $hs->eof;
+    my $text = $tree->findnodes('//div[@id="materia-letra"]')->[0];
+    $infs->{text}    = $text->as_text;
+    $infs->{content} = $self->html_clean->clean( $text->as_HTML );
 
     return unless $infs->{text};
 

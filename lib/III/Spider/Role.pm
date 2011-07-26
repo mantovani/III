@@ -2,6 +2,13 @@ package III::Spider::Role;
 
 use Moose::Role;
 use Scalar::Util;
+use HTML::Clean;
+
+has 'html_clean' => (
+    is      => 'ro',
+    isa     => 'Object',
+    default => sub { HTML::Clean->new }
+);
 
 sub erase_tag {
     my ( $self, $element, $path ) = @_;

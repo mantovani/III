@@ -5,6 +5,8 @@ use Moose::Role;
 use HTML::TreeBuilder::XPath;
 use Data::Dumper;
 
+with 'III::Spider::Role';
+
 has 'link' => (
     is      => 'ro',
     isa     => 'Str',
@@ -54,17 +56,21 @@ sub parser_news {
     $infs->{category} = 'Tecnologia';
     $infs->{source}   = $self->source;
 
-    my @get_text = $tree->findnodes('//div[@id="NewsSummary"]')->[0]->content_list;
+    my @get_text =
+      $tree->findnodes('//div[@id="NewsSummary"]')->[0]->content_list;
     foreach my $text (@get_text) {
         if ( !ref $text ) {
             $infs->{text} .= $text;
+            $infs->{content} .= $self->html_clean->clean("<p>$text</p>");
         }
         else {
             if ( $text->as_HTML !~ /div/ ) {
                 $infs->{text} .= $text->as_text;
+                $infs->{content} .= $self->html_clean->clean( $text->as_HTML );
             }
         }
     }
+
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];
     if ($keywords) {
         $infs->{keywords} = [ split /,/, $keywords->attr('content') ];

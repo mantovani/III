@@ -6,6 +6,8 @@ use HTML::TreeBuilder::XPath;
 use Data::Dumper;
 use utf8;
 
+with 'III::Spider::Role';
+
 has 'links' => (
     is      => 'ro',
     isa     => 'HashRef',
@@ -39,22 +41,23 @@ sub all_news {
     my $self = shift;
     foreach my $link ( keys %{ $self->links } ) {
         my $content = $self->spider->agent->get( $self->links->{$link} );
-        $self->itens( $content, { categoria => $link } );
+        $self->itens( $content, { category => $link } );
     }
 }
 
 sub itens {
-    my ( $self, $html, $categoria ) = @_;
+    my ( $self, $html, $category ) = @_;
     my $tree  = HTML::TreeBuilder::XPath->new_from_content($html);
     my @itens = $tree->findnodes('//div[@class="module"]/div//a[1]');
     foreach my $item (@itens) {
-        my $content = $self->spider->agent->get( $item->attr('href') );
+        my $content =
+          $self->spider->agent->get( $item->attr('href') . '?sp=true' );
         $self->parser_news(
             $content,
             {
                 title       => $item->as_text,
                 source_link => 'http://br.reuters.com' . $item->attr('href'),
-                categoria   => $categoria->{categoria},
+                category   => $category->{category},
             }
         );
     }
@@ -65,23 +68,21 @@ sub parser_news {
     my ( $self, $news, $infs ) = @_;
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
 
-    my $text = $tree->findvalue('//div[@id="resizeableText"]');
-    if ( $text =~ s/\(Por\s(.+)\)// ) {
+    my $text = $tree->findnodes('//div[@id="resizeableText"]')->[0];
+
+    return unless $text;
+
+    my $text_author = $text->as_text;
+    if ( $text_author =~ s/\(Por\s(.+)\)// ) {
         $infs->{author} = $1;
     }
 
-	$text =~ s/.+?\-\s(.+)/$1/;
+    $text =~ s/.+?\-\s(.+)/$1/;
 
-    $infs->{category} = $infs->{categoria};
+    $infs->{category} = $infs->{category};
     $infs->{source}   = $self->source;
-    $infs->{text}     = $text;
-
-    return if length( $infs->{text} ) < 20;
-
-    if ( $tree->exists('//p[@class="wideVideoPlayer"]') ) {
-        my $video = $tree->findnodes('//p[@class="wideVideoPlayer"]')->[0];
-        $infs->{text} .= $video->as_HTML;
-    }
+    $infs->{text}     = $text->as_text;
+    $infs->{content}  = $self->html_clean->clean( $text->as_HTML );
 
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];
     if ($keywords) {

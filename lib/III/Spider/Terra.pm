@@ -42,12 +42,13 @@ sub all_news {
     foreach my $go_link ( keys %{ $self->link } ) {
         my $content = $self->spider->agent->get( $self->link->{$go_link} );
         my $xml     = XMLin($content);
-        $self->itens( $xml, { categoria => $go_link } );
+        $self->itens( $xml, { category => $go_link } );
     }
 }
 
 sub itens {
-    my ( $self, $xml, $categoria ) = @_;
+    my ( $self, $xml, $category ) = @_;
+
     my @itens = @{ $xml->{channel}->{item} };
     foreach my $item (@itens) {
 
@@ -57,7 +58,7 @@ sub itens {
             {
                 title       => decode( 'utf8', $item->{title} ),
                 source_link => $item->{link},
-                categoria   => $categoria->{categoria},
+                category    => $category->{category},
             }
         );
     }
@@ -68,27 +69,30 @@ sub parser_news {
 
     # - Retirando tag em
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
-    $self->erase_tag( $tree, $_ )
-      for ( '//em', '//a[@class="textolinkbold"]' );
+    $self->erase_tag( $tree, $_ ) for ( '//em', '//a[@class="textolinkbold"]' );
     if ( $tree->as_HTML =~ m{<dt>(.+?)</dt>} ) {
         $infs->{author} = $1;
     }
 
-    $infs->{category} = $infs->{categoria};
     $infs->{sub_title} =
       $tree->findvalue('//div[@class="img-article fontsize p1 printing"]/p');
     $infs->{source} = $self->source;
 
     my $text = $tree->findnodes('//div[@id="SearchKey_Text1"]')->[0];
-    $self->erase_tag( $text, './/p/a' );
-    $infs->{text} = $text->as_text;
+    return unless ($text);
+
+    if ( $infs->{category} =~ /Economia/ ) {
+        $self->erase_tag( $text, './/a' );
+    }
+    $self->erase_tag( $text, './/dl' );
+
+    $infs->{content} = $self->html_clean->clean( $text->as_HTML );
+    $infs->{text}    = $text->as_text;
 
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];
     if ($keywords) {
         $infs->{keywords} = [ split /,/, $keywords->attr('content') ];
     }
-
-    return unless ( $infs->{text} );
 
     $self->spider->store($infs);
     $tree->delete;

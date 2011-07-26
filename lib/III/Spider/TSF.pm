@@ -5,6 +5,8 @@ use Moose::Role;
 use HTML::TreeBuilder::XPath;
 use Data::Dumper;
 
+with 'III::Spider::Role';
+
 has 'link' => (
     is      => 'ro',
     isa     => 'Str',
@@ -62,10 +64,15 @@ sub parser_news {
 
     if ( $tree->findvalue('//div[@id="Article"]') =~ /\w{10,}/ ) {
         $infs->{text} = $tree->findvalue('//div[@id="Article"]');
+        my $content = $tree->findnodes('//div[@id="Article"]')->[0];
+        $infs->{content} = $self->html_clean->clean( $content->as_HTML );
     }
     else {
-        $infs->{text} = $tree->findvalue('//span[@id="SummaryContent"]');
+        my $content = $tree->findnodes('//span[@id="SummaryContent"]')->[0];
+        $infs->{content} = $self->html_clean->clean( $content->as_HTML );
+        $infs->{text}    = $tree->findvalue('//span[@id="SummaryContent"]');
     }
+
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];
     if ($keywords) {
         $infs->{keywords} = [ split /,/, $keywords->attr('content') ];
