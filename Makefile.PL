@@ -31,6 +31,7 @@ requires 'TryCatch';
 requires 'Catalyst::Model::MongoDB';
 requires 'HTML::Strip';
 requires 'Scalar::Util';
+requires 'HTML::Cleaner';
 
 requires
   'Config::General';  # This should reflect the config file format you've chosen
