@@ -60,15 +60,19 @@ sub parser_news {
     $infs->{source}    = $self->source;
 
     my $text = $tree->findnodes('//div[@id="materia-letra"]')->[0];
-    $infs->{text}    = $text->as_text;
-    $infs->{content} = $self->html_clean->clean( $text->as_HTML );
+    $self->erase_tag( $text, '//ul/li' );
+    $self->erase_tag( $text, '//img/strong' );
 
-    return unless $infs->{text};
+    $infs->{text} = $text->as_text;
+    my $content = $self->html_clean( $text->as_HTML );
+    $content =~ s/\(\)//g;
+    $infs->{content} = $content;
 
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];
     if ($keywords) {
         $infs->{keywords} = [ split /,/, $keywords->attr('content') ];
     }
+
     $self->spider->store($infs);
     $tree->delete;
 }

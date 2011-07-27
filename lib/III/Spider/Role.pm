@@ -2,19 +2,20 @@ package III::Spider::Role;
 
 use Moose::Role;
 use Scalar::Util;
-use HTML::Clean;
+use HTML::StripTags qw(strip_tags);
 
-has 'html_clean' => (
-    is      => 'ro',
-    isa     => 'Object',
-    default => sub { HTML::Clean->new }
-);
+sub html_clean {
+    my ( $self, $html ) = @_;
+    strip_tags( $html,
+'<H1><H2><H3><H4><H5><H6><I><B><U><BR><TABLE><TD><TR><LI><UL><A><P><IMG>'
+    );
+}
 
 sub erase_tag {
     my ( $self, $element, $path ) = @_;
     if ( $element =~ /HTML::TreeBuilder|HTML::Element/ ) {
         foreach my $godel ( @{ $element->findnodes($path) } ) {
-            $godel->delete_content;
+            $godel->replace_with();
         }
     }
     else {

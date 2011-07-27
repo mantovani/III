@@ -65,11 +65,11 @@ sub parser_news {
     if ( $tree->findvalue('//div[@id="Article"]') =~ /\w{10,}/ ) {
         $infs->{text} = $tree->findvalue('//div[@id="Article"]');
         my $content = $tree->findnodes('//div[@id="Article"]')->[0];
-        $infs->{content} = $self->html_clean->clean( $content->as_HTML );
+        $infs->{content} = $self->html_clean( $content->as_HTML );
     }
     else {
         my $content = $tree->findnodes('//span[@id="SummaryContent"]')->[0];
-        $infs->{content} = $self->html_clean->clean( $content->as_HTML );
+        $infs->{content} = $self->html_clean( $content->as_HTML );
         $infs->{text}    = $tree->findvalue('//span[@id="SummaryContent"]');
     }
 

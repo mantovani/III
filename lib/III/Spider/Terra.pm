@@ -78,7 +78,13 @@ sub parser_news {
       $tree->findvalue('//div[@class="img-article fontsize p1 printing"]/p');
     $infs->{source} = $self->source;
 
+    my $image =
+      $tree->findnodes('//div[@class="img-article fontsize p1 printing"]//img')
+      ->[0];
     my $text = $tree->findnodes('//div[@id="SearchKey_Text1"]')->[0];
+
+    if ($image) { $image->insert_element($text); $text = $image }
+
     return unless ($text);
 
     if ( $infs->{category} =~ /Economia/ ) {
@@ -86,7 +92,7 @@ sub parser_news {
     }
     $self->erase_tag( $text, './/dl' );
 
-    $infs->{content} = $self->html_clean->clean( $text->as_HTML );
+    $infs->{content} = $self->html_clean( $text->as_HTML );
     $infs->{text}    = $text->as_text;
 
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];

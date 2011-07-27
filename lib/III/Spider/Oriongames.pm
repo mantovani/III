@@ -53,6 +53,10 @@ sub itens {
 
 sub parser_news {
     my ( $self, $news, $infs ) = @_;
+
+    $news =~ s|src="(.+?)"|src="http://www.oriongames.com.br/$1"|g;
+    $news =~ s/Fonte:\s.+//;
+
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
 
     $infs->{author}    = $tree->findvalue('//h5/a[@class="highslide"]');
@@ -62,7 +66,7 @@ sub parser_news {
     my $text = $tree->findnodes('//div[@id="conteudoTexto"]')->[0];
 
     $infs->{text}    = $text->as_text;
-    $infs->{content} = $self->html_clean->clean( $text->as_HTML );
+    $infs->{content} = $self->html_clean( $text->as_HTML );
 
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];
     if ($keywords) {

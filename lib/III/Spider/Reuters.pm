@@ -82,7 +82,7 @@ sub parser_news {
     $infs->{category} = $infs->{category};
     $infs->{source}   = $self->source;
     $infs->{text}     = $text->as_text;
-    $infs->{content}  = $self->html_clean->clean( $text->as_HTML );
+    $infs->{content}  = $self->html_clean( $text->as_HTML );
 
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];
     if ($keywords) {

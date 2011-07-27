@@ -63,7 +63,7 @@ sub parser_news {
 
     foreach my $text (@texts) {
         $infs->{text} .= $text->as_text;
-        $infs->{content} .= $self->html_clean->clean( $text->as_HTML );
+        $infs->{content} .= $self->html_clean( $text->as_HTML );
     }
 
     my $keywords = $tree->findnodes('//meta[@name="keywords"]')->[0];

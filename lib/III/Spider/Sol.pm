@@ -51,6 +51,9 @@ sub itens {
 
 sub parser_news {
     my ( $self, $news, $infs ) = @_;
+
+    $news =~ s|src="(.+?)"|src="http://sol.sapo.pt$1"|g;
+
     my $tree = HTML::TreeBuilder::XPath->new_from_content($news);
 
     $infs->{category} = 'Tecnologia';
@@ -58,15 +61,20 @@ sub parser_news {
 
     my @get_text =
       $tree->findnodes('//div[@id="NewsSummary"]')->[0]->content_list;
+
+    my $img = $tree->findnodes('//div[@id="NewsContainer"]//img')->[0];
+
+    $infs->{content} .= $img->as_HTML if $img;
+
     foreach my $text (@get_text) {
         if ( !ref $text ) {
             $infs->{text} .= $text;
-            $infs->{content} .= $self->html_clean->clean("<p>$text</p>");
+            $infs->{content} .= $self->html_clean("<p>$text</p>");
         }
         else {
             if ( $text->as_HTML !~ /div/ ) {
                 $infs->{text} .= $text->as_text;
-                $infs->{content} .= $self->html_clean->clean( $text->as_HTML );
+                $infs->{content} .= $self->html_clean( $text->as_HTML );
             }
         }
     }

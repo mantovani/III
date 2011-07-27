@@ -3,6 +3,7 @@ package III::Store;
 use Moose::Role;
 use MongoDB;
 use III::Glue;
+use III::Store::Image;
 use utf8;
 
 with 'III::Store::MetaText';
@@ -30,6 +31,12 @@ has 'attrs' => (
             qw/category title sub_title source source_link author keywords text content/
         ];
     }
+);
+
+has 'iiiimage' => (
+    is      => 'ro',
+    isa     => 'Object',
+    default => sub { III::Store::Image->new }
 );
 
 =head1 SYNOPSIS
@@ -79,6 +86,8 @@ sub store {
         $self->index_category( $meta_infs->{category} );
 
         if ( $self->iiiglue->check( 'title:' . $infs->{meta_text}->{title} ) ) {
+            $meta_infs->{content} =
+              $self->iiiimage->save_images( $meta_infs->{content} );
             $self->db->iii->news->insert($meta_infs);
         }
         else {
