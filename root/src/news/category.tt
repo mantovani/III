@@ -1,21 +1,23 @@
 <div align="center">
 	<h1>[% category %]</h1>
 </div>
-[% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global - $category " %]
 <div class="no_float">
-	[% WHILE (my_news = (category_news.next)) %]
+[% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global - $category " %]
+</div>
+[% WHILE (my_news = (category_news.next)) %]
 
-	[% SET my_date = date(my_news.timestamp) %]
+[% SET my_date = date(my_news.timestamp) %]
 
-	<div itemscope itemtype="[% c.req.uri %]">
-	    <a href="[% c.uri_for(c.controller("News").action_for("news"), no_accents(my_news.category), my_date.year ,
-			url_friendly(my_news.title) _ '-' _ id(my_news)) %]">
-	        <h3 itemprop="nome">[% my_news.title %]</h3></a>
-	    <p itemprop="resumo">[% few_words(my_news.text) %]</p>
-		<p itemprop="data"><i>[% my_date.ymd("/") %]</i></p>
-	</div>
+	
+<div class="category" itemscope itemtype="[% c.req.uri %]">
+    <a href="[% c.uri_for(c.controller("News").action_for("news"), no_accents(my_news.category), my_date.year ,
+		url_friendly(my_news.title) _ '-' _ id(my_news)) %]">
+        <h3 itemprop="nome">[% my_news.title %]</h3></a>
+    <p itemprop="resumo">[% few_words(my_news.text) %]</p>
+	<p itemprop="data"><i>[% my_date.ymd("/") %]</i></p>
+</div>
 
-	[% END %]
-
-	[% INCLUDE site/page.tt %]
+[% END %]
+<div class="no_float">
+[% INCLUDE site/page.tt %]
 </div>

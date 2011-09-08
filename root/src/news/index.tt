@@ -2,10 +2,12 @@
 		<img src="/static/images/logo.png"></img>
 		<h2>Porque Global &eacute; nome pr&oacute;prio</h2>
  </div>
+<div class="no_float">
+
 [% INCLUDE social/social.tt twitter_text = "Not&iacute;cias Global, porque Global &eacute; nome pr&oacute;prio" %]
-
 <div class="search">[% INCLUDE site/search.tt %]</div>
-
+</div>
+<div class="main">
 [% FOREACH my_category IN c.model('MongoDB').all_categorys.all %]
 	<div class="last_news">
 	<h3>
@@ -25,6 +27,7 @@
 		</div>
 
 	[% END %]
+
 	</div>
 [% END %]
-
+</div>
