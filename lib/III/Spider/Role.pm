@@ -7,7 +7,7 @@ use HTML::StripTags qw(strip_tags);
 sub html_clean {
     my ( $self, $html ) = @_;
     strip_tags( $html,
-'<H1><H2><H3><H4><H5><H6><I><B><U><BR><TABLE><TD><TR><LI><UL><A><P><IMG>'
+'<H1><H2><H3><H4><H5><H6><I><B><U><BR><TABLE><TD><TR><LI><UL><A><P><IMG><STRONG>'
     );
 }
 
