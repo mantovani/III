@@ -9,7 +9,7 @@
 	[% INCLUDE site/search.tt %]
 </div>
 
-[% WHILE (my_news = (search_news.next)) %]
+[% FOREACH my_news IN search_news %]
 
 [% SET my_date = date(my_news.timestamp) %]
 

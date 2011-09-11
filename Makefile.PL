@@ -21,6 +21,7 @@ requires 'DateTime';
 requires 'Lingua::PT::UnConjugate';
 requires 'URI::Encode';
 requires 'Catalyst::View::XML::Feed';
+requires 'Cache::Memcached::Fast';
 
 # Backend
 requires 'MongoDB';

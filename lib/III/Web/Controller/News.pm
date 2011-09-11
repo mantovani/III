@@ -10,6 +10,38 @@ use utf8;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
+use Cache::Memcached::Fast;
+
+has 'cache' => (
+    is      => 'ro',
+    isa     => 'Object',
+    default => sub {
+        new Cache::Memcached::Fast(
+            {
+                servers         => [ { address => 'localhost:11211', }, ],
+                namespace       => 'my:',
+                connect_timeout => 0.2,
+                io_timeout      => 0.5,
+                close_on_error  => 1,
+                compress_threshold => 100_000,
+                compress_ratio     => 0.9,
+                compress_methods   => [
+                    \&IO::Compress::Gzip::gzip,
+                    \&IO::Uncompress::Gunzip::gunzip
+                ],
+                max_failures      => 3,
+                failure_timeout   => 2,
+                ketama_points     => 150,
+                nowait            => 1,
+                hash_namespace    => 1,
+                serialize_methods => [ \&Storable::freeze, \&Storable::thaw ],
+                utf8              => ( $^V ge v5.8.1 ? 1 : 0 ),
+                max_size          => 512 * 1024,
+            }
+        );
+    }
+);
+
 =head1 NAME
 
 III::Web::Controller::News - Catalyst Controller
@@ -175,16 +207,32 @@ sub search : Chained('base') : PathPart('busca') : Args(0) {
             $skip = $limit * ( $c->req->params->{page} - 1 );
         }
 
-        my ( $result, $find ) =
-          $c->model('MongoDB')->by_search( $busca, $limit, $skip );
-        my $page = Data::Page->new();
-        $page->total_entries( $find->count );
-        $page->entries_per_page($limit);
-        $page->current_page( $c->req->params->{page} // 1 );
+        my $cache_key = "$busca:$limit:$skip";
+        if ( my $buff = $self->cache->get($cache_key) ) {
+            my $page = Data::Page->new();
+            $page->total_entries( $buff->{count} );
+            $page->entries_per_page($limit);
+            $page->current_page( $c->req->params->{page} // 1 );
 
-        $c->stash->{pager}       = $page;
-        $c->stash->{search_news} = $result;
+            $c->stash->{pager}       = $page;
+            $c->stash->{search_news} = $buff->{result};
 
+        }
+        else {
+            my ( $result, $find ) =
+              $c->model('MongoDB')->by_search( $busca, $limit, $skip );
+            my $all_results = [ $result->all ];
+
+            my $page = Data::Page->new();
+            $page->total_entries( $find->count );
+            $page->entries_per_page($limit);
+            $page->current_page( $c->req->params->{page} // 1 );
+
+            $c->stash->{pager}       = $page;
+            $c->stash->{search_news} = $all_results;
+            $self->cache->set( $cache_key,
+                { result => $all_results, count => $find->count }, 1800 );
+        }
     }
 }
 
