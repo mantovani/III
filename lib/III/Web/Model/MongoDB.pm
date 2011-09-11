@@ -6,6 +6,38 @@ use Encode;
 use utf8;
 BEGIN { extends 'Catalyst::Model::MongoDB' }
 
+use Cache::Memcached::Fast;
+
+has 'cache' => (
+    is      => 'ro',
+    isa     => 'Object',
+    default => sub {
+        new Cache::Memcached::Fast(
+            {
+                servers         => [ { address => 'localhost:11211', }, ],
+                namespace       => 'iii:',
+                connect_timeout => 0.2,
+                io_timeout      => 0.5,
+                close_on_error  => 1,
+                compress_threshold => 100_000,
+                compress_ratio     => 0.9,
+                compress_methods   => [
+                    \&IO::Compress::Gzip::gzip,
+                    \&IO::Uncompress::Gunzip::gunzip
+                ],
+                max_failures      => 3,
+                failure_timeout   => 2,
+                ketama_points     => 150,
+                nowait            => 1,
+                hash_namespace    => 1,
+                serialize_methods => [ \&Storable::freeze, \&Storable::thaw ],
+                utf8              => ( $^V ge v5.8.1 ? 1 : 0 ),
+                max_size          => 512 * 1024,
+            }
+        );
+    }
+);
+
 __PACKAGE__->config(
     host           => 'localhost',
     port           => '27017',
@@ -20,8 +52,18 @@ sub all_categorys {
 
 sub last_by_category {
     my ( $self, $category ) = @_;
-    $self->c('news')->query( { category => $category },
-        { limit => 10, sort_by => { timestamp => -1 } } );
+    my $cache_key = "last_by_category:$category";
+    if ( my $buff = $self->cache->get($cache_key) ) {
+        return $buff;
+    }
+    else {
+        my $result = [
+            $self->c('news')->query( { category => $category },
+                { limit => 10, sort_by => { timestamp => -1 } } )->all
+        ];
+        $self->cache->set( $cache_key, $result, 1800 );
+        return $result;
+    }
 }
 
 sub by_category {
@@ -35,7 +77,6 @@ sub by_category {
 sub feed_category {
     my ( $self, $category, $c ) = @_;
     my ( $skip, $limit ) = ( 0, 20 );
-
     my ( $itens, $find ) = $self->by_category( $limit, $skip, $category );
     return $self->_encode_entris( $c, $itens, $find );
 }

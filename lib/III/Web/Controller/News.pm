@@ -88,6 +88,7 @@ sub base : Chained('/base') : PathPart('noticias') : CaptureArgs(0) {
         );
         return $url;
     };
+
 }
 
 sub index : Chained('base') : PathPart('') : Args(0) {
@@ -176,7 +177,7 @@ sub search : Chained('base') : PathPart('busca') : Args(0) {
         }
 
         my $cache_key = "$busca:$limit:$skip";
-        if ( my $buff = $c->model('Cache')->cache->get($cache_key) ) {
+        if ( my $buff = $c->model('MongoDB')->cache->get($cache_key) ) {
             my $page = Data::Page->new();
             $page->total_entries( $buff->{count} );
             $page->entries_per_page($limit);
@@ -198,7 +199,7 @@ sub search : Chained('base') : PathPart('busca') : Args(0) {
 
             $c->stash->{pager}       = $page;
             $c->stash->{search_news} = $all_results;
-            $c->model('Cache')
+            $c->model('MongoDB')
               ->cache->set( $cache_key,
                 { result => $all_results, count => $find->count }, 1800 );
         }
@@ -211,12 +212,12 @@ sub search_feed : Chained('base') : PathPart('busca_feed') : Args(0) {
         my $busca = $c->req->params->{q};
         my $entries;
         my $cache_key = "feed:$busca";
-        if ( my $buff_entries = $c->model('Cache')->cache->get($cache_key) ) {
+        if ( my $buff_entries = $c->model('MongoDB')->cache->get($cache_key) ) {
             $entries = $buff_entries;
         }
         else {
             $entries = $c->model('MongoDB')->feed_search( $busca, $c );
-            $c->model('Cache')->cache->set( $cache_key, $entries, 1800 );
+            $c->model('MongoDB')->cache->set( $cache_key, $entries, 1800 );
         }
         $c->stash->{feed} = {
             format      => 'RSS 1.0',
