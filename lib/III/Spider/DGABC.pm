@@ -14,8 +14,6 @@ has 'link' => (
     isa     => 'HashRef',
     default => sub {
         {
-            Brasil =>
-              'http://home.dgabc.com.br/canais/rss/caderno.asp?caderno=15',
             Economia =>
               'http://home.dgabc.com.br/canais/rss/caderno.asp?caderno=3',
         };

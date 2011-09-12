@@ -13,7 +13,6 @@ has 'links' => (
     isa     => 'HashRef',
     default => sub {
         {
-            Brasil => 'http://www.bbc.co.uk/portuguese/topicos/brasil/',
             Mundo  => 'http://www.bbc.co.uk/portuguese/topicos/internacional/',
             Economia => 'http://www.bbc.co.uk/portuguese/topicos/economia/',
             'Ciência' =>
