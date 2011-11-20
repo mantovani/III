@@ -8,6 +8,12 @@ BEGIN { extends 'Catalyst::Model::MongoDB' }
 
 use Cache::Memcached::Fast;
 
+has 'tree_months' => (
+    is      => 'ro',
+    isa     => 'Int',
+    default => sub { DateTime->now->subtract( months => 1 )->epoch },
+    lazy    => 1,
+);
 has 'cache' => (
     is      => 'ro',
     isa     => 'Object',
@@ -118,7 +124,8 @@ sub by_search {
     my ( $self, $busca, $limit, $skip ) = @_;
     my $find = $self->c('news')->find(
         {
-            '$or' => [
+            timestamp => { '$gt' => $self->tree_months },
+            '$or'     => [
                 { 'meta_text.title' => qr/$busca/ },
                 { 'meta_text.text'  => qr/$busca/ },
             ]
