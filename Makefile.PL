@@ -16,7 +16,7 @@ requires 'Catalyst::Action::RenderView';
 requires 'Moose';
 requires 'namespace::autoclean';
 requires 'Catalyst::Plugin::Unicode';
-requires 'Text::Unaccent';
+requires 'Text::Unaccent::PurePerl';
 requires 'DateTime';
 requires 'Lingua::PT::UnConjugate';
 requires 'URI::Encode';

@@ -1,7 +1,7 @@
 package III::Web::Controller::News;
 use Moose;
 use namespace::autoclean;
-use Text::Unaccent;
+use Text::Unaccent::PurePerl;
 use MongoDB::OID;
 use Encode;
 use DateTime;

@@ -1,7 +1,7 @@
 package III::Store::MetaText;
 
 use Moose::Role;
-use Text::Unaccent;
+use Text::Unaccent::PurePerl;
 use utf8;
 
 has 'infs_attrs' => (
