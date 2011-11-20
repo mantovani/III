@@ -13,10 +13,11 @@
 
 [% SET my_date = date(my_news.timestamp) %]
 
+<a href="[% my_news.source_link %]" target="_blank"><font size="4">[% my_news.title %]</font></a>
 <div itemscope itemtype="[% c.req.uri %]">
     <a href="[% c.uri_for(c.controller("News").action_for("news"), no_accents(my_news.category), my_date.year ,
 url_friendly(my_news.title) _ '-' _ id(my_news)) %]">
-        <h3 itemprop="nome">[% my_news.title %]</h3></a>
+        <font size="2" color="orange" itemprop="nome"> cache </font></a>
     <p itemprop="resumo">[% few_words(my_news.text) %]</p>
 	<p itemprop="data"><i>[% my_date.ymd("/") %]</i></p>
 </div>
